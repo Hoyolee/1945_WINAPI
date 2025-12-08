@@ -93,10 +93,6 @@ int CMap::Update()
 void CMap::Late_Update()
 {
   Map_Scrolling();
-//#ifdef _DEBUG
-//  cout << CScrollMgr::Get_Instance()->Get_ScrollY() << "\t" << m_tInfo.fY << endl;
-//#endif // _DEBUG
-
 }
 
 void CMap::Render(HDC hDC)

@@ -16,6 +16,9 @@ public:
   void Render(HDC hDC) override;
   void Release() override;
   void UFO_Move_Frame();
+  bool Anim_Dead();
+  void OnCollision(CObj* pOther);
+
 private:
   bool    m_bDown;        
   int     m_iTargetX;     

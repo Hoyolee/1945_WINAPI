@@ -103,8 +103,8 @@ void CCollisionMgr::Collision_Circle(list<CObj*> _Dst, list<CObj*> _Src)
 		{
 			if (Check_Circle(Dst, Src))
 			{
-				Dst->Set_Dead();
-				Src->Set_Dead();
+				Dst->OnCollision(Dst);
+				Src->OnCollision(Src);
 			}
 		}
 	}

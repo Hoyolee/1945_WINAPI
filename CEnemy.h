@@ -19,7 +19,7 @@ public:
   void Triangle();
   bool Anim_Dead();
   void OnCollision(CObj* pOther) override;
-
+  void Enemy_Move_Frame();
 private:
   float m_fBulletTime;
   bool  m_biSDead;

@@ -62,7 +62,7 @@ int CEnemy::Update()
 		return OBJ_NOEVENT;
 	}
 
-	Move_Frame();
+	Enemy_Move_Frame();
 
   return OBJ_NOEVENT;
 }
@@ -111,24 +111,16 @@ void CEnemy::Release()
 {
 }
 
-void CEnemy::OnCollision(CObj* pOther)
+void CEnemy::Enemy_Move_Frame()
 {
-	if (m_eCurState == DEAD)
-		return;
+	if (m_tFrame.dwSpeed + m_tFrame.dwTime < GetTickCount())
+	{
+		++m_tFrame.iStart;
+		m_tFrame.dwTime = GetTickCount();
 
-	m_eCurState = DEAD;
-	m_biSDead = true;
-
-	// 데드 스프라이트로 전환, 프레임 초기화
-	m_pFrameKey = L"EnemyDead";
-
-	m_tFrame.iStart  = 0;
-	m_tFrame.iEnd    = 11;
-	m_tFrame.iMotion = 0;
-	m_tFrame.dwSpeed = 100;
-	m_tFrame.dwTime  = GetTickCount();
-
-	// 체력 감소 등 다른 처리(필요하면) 추가
+		if (m_tFrame.iStart > m_tFrame.iEnd)
+			m_tFrame.iStart = 0;
+	}
 }
 
 bool CEnemy::Anim_Dead()
@@ -145,4 +137,22 @@ bool CEnemy::Anim_Dead()
 			return true; 
 	}
 	return false; 
+}
+
+void CEnemy::OnCollision(CObj* pOther)
+{
+
+	if (m_eCurState == DEAD)
+		return;
+
+	m_eCurState = DEAD;
+	m_biSDead = true;
+
+	m_pFrameKey = L"EnemyDead";
+
+	m_tFrame.iStart = 0;
+	m_tFrame.iEnd = 11;
+	m_tFrame.iMotion = 0;
+	m_tFrame.dwSpeed = 100;
+	m_tFrame.dwTime = GetTickCount();
 }

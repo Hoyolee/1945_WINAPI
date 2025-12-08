@@ -59,13 +59,13 @@ void CStage::Late_Update()
 	);
 	
 	CCollisionMgr::Collision_Circle(
-		CObjMgr::Get_Instance()->Get_Object(OBJ_BOSS),
-		CObjMgr::Get_Instance()->Get_Object(OBJ_BULLET)
+		CObjMgr::Get_Instance()->Get_Object(OBJ_BULLET),
+		CObjMgr::Get_Instance()->Get_Object(OBJ_MONSTER)
 	);
 
 	CCollisionMgr::Collision_Circle(
-		CObjMgr::Get_Instance()->Get_Object(OBJ_BULLET),
-		CObjMgr::Get_Instance()->Get_Object(OBJ_MONSTER)
+		CObjMgr::Get_Instance()->Get_Object(OBJ_BOSS),
+		CObjMgr::Get_Instance()->Get_Object(OBJ_BULLET)
 	);
 
 	CCollisionMgr::Collision_Rect(
