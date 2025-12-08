@@ -1,0 +1,253 @@
+#include "pch.h"
+#include "CPlayer.h"
+#include "CBullet.h"
+#include "CAbstractFactory.h"
+#include "CObjMgr.h"
+#include "CScrollMgr.h"
+#include "CKeyMgr.h"
+#include "CBmpMgr.h"
+#include "CCollisionMgr.h"
+
+// 플레이어가 사용하는 오브젝트 헤더
+#include "CBomb.h"
+//#include "CLife.h"
+
+CPlayer::CPlayer() :  m_fTime(0.f)
+, m_ePreState(ST_END), m_eCurState(IDLE)
+, m_fBulletTime(0.f)
+, m_iScore(0), m_iBombCount(3), m_iLife(3) 
+{
+}
+
+CPlayer::~CPlayer()
+{
+	Release();
+}
+
+void CPlayer::Initialize()
+{
+	m_iHp = 1;
+	// 플레이어 크기 및 위치지정
+	m_tInfo.fCX = 217.f / 7.0f;
+	m_tInfo.fCY = 40.f;
+
+	m_fSpeed = 4.f;
+
+	m_fDistance = 100.f;
+	m_fBulletTime = 0.5f;
+
+	// 플레이어의 프레임 설정
+	m_tFrame.iStart = 0;
+	m_tFrame.iEnd = 6;
+	m_tFrame.iMotion = 0;
+	m_tFrame.dwSpeed = 200;
+	m_tFrame.dwTime = GetTickCount();
+
+	Insert_Player_Animation();
+
+	m_eCurState = IDLE;
+}
+
+int CPlayer::Update()
+{
+	__super::Update_Rect();
+
+	Key_Input();
+
+	Move_Frame();
+
+	if (m_iHp == 0)
+		return OBJ_DEAD;
+
+	return OBJ_NOEVENT;
+}
+
+void CPlayer::Late_Update()
+{
+	Player_Move_Frame();
+
+}
+
+void CPlayer::Render(HDC hDC)
+{
+	HDC		hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
+	// 플레이어 렌더
+
+	GdiTransparentBlt(hDC,												// 복사 받을 DC
+		m_tRect.left,										// 복사 받을 공간의 LEFT	
+		m_tRect.top ,											// 복사 받을 공간의 TOP
+		(int)m_tInfo.fCX,														// 복사 받을 공간의 가로 
+		(int)m_tInfo.fCY,														// 복사 받을 공간의 세로 
+		hMemDC,																			// 복사 할 DC
+		m_tFrame.iStart * (int)m_tInfo.fCX,					// 복사할 이미지의 LEFT, TOP
+		m_tFrame.iMotion * (int)m_tInfo.fCY,
+		(INT)m_tInfo.fCX,														// 복사할 이미지의 가로, 세로
+		(INT)m_tInfo.fCY,
+		RGB(255, 0, 255));													// 제거할 색상
+}
+
+void CPlayer::Key_Input()
+{
+	m_fBulletTime -= 1.0f / 15.f;
+#pragma region 상좌우
+	if (GetAsyncKeyState(VK_UP))
+	{
+		m_tInfo.fY -= m_fSpeed;
+		m_pFrameKey = L"Player_UP";
+		m_eCurState = IDLE;
+		if(GetAsyncKeyState(VK_RIGHT))
+		{
+			m_tInfo.fX += m_fSpeed;
+			m_pFrameKey = L"Player_RIGHT";
+			m_eCurState = RIGHT_MOVE;
+		}
+		else if (GetAsyncKeyState(VK_LEFT))
+		{
+			m_tInfo.fX -= m_fSpeed;
+			m_pFrameKey = L"Player_LEFT";
+			m_eCurState = LEFT_MOVE;
+    }
+	}
+#pragma endregion
+#pragma region 하좌우
+	else if (GetAsyncKeyState(VK_DOWN))
+	{
+		m_tInfo.fY += m_fSpeed;
+		m_pFrameKey = L"Player_DOWN";
+		m_eCurState = IDLE;
+
+		if(GetAsyncKeyState(VK_RIGHT))
+		{
+			m_tInfo.fX += m_fSpeed;
+			m_pFrameKey = L"Player_RIGHT";
+			m_eCurState = RIGHT_MOVE;
+		}
+		else if (GetAsyncKeyState(VK_LEFT))
+		{
+			m_tInfo.fX -= m_fSpeed;
+			m_pFrameKey = L"Player_LEFT";
+			m_eCurState = LEFT_MOVE;
+    }
+	}
+#pragma endregion
+	else if (GetAsyncKeyState(VK_RIGHT))
+	{
+		m_tInfo.fX += m_fSpeed;
+		m_pFrameKey = L"Player_RIGHT";
+		m_eCurState = RIGHT_MOVE;
+	}
+	else if (GetAsyncKeyState(VK_LEFT))
+	{
+		m_tInfo.fX -= m_fSpeed;
+		m_pFrameKey = L"Player_LEFT";
+		m_eCurState = LEFT_MOVE;
+	}
+	 if (GetAsyncKeyState(VK_SPACE))
+	{
+		 if (m_fBulletTime <= 0.f)
+		{
+			CObjMgr::Get_Instance()->AddObject(OBJ_BULLET, CAbstractFactory<CBullet>::Create(m_tInfo.fX,m_tInfo.fY));
+			m_fBulletTime = 0.5f;
+		}
+	} 
+	else
+		m_eCurState = IDLE;
+}
+void CPlayer::Motion_Change()
+{
+	if (m_ePreState != m_eCurState)
+	{
+		switch (m_eCurState)
+		{
+		case IDLE:
+			m_tFrame.iStart = 3;
+			m_tFrame.iEnd = 3;
+			m_tFrame.iMotion = 0;
+			m_tFrame.dwSpeed = 200;
+			m_tFrame.dwTime = GetTickCount();
+			break;
+
+		case LEFT_MOVE:
+			m_tFrame.iStart = 3;
+			m_tFrame.iEnd = 0;
+			m_tFrame.iMotion = 0;
+			m_tFrame.dwSpeed = 200;
+			m_tFrame.dwTime = GetTickCount();
+			break;
+
+		case RIGHT_MOVE:
+			m_tFrame.iStart = 3;
+			m_tFrame.iEnd = 6;
+			m_tFrame.iMotion = 0;
+			m_tFrame.dwSpeed = 200;
+			m_tFrame.dwTime = GetTickCount();
+			break;
+
+		case DEAD:
+			m_tFrame.iStart = 0;
+			m_tFrame.iEnd = 3;
+			m_tFrame.iMotion = 4;
+			m_tFrame.dwSpeed = 200;
+			m_tFrame.dwTime = GetTickCount();
+			break;
+		}
+		m_ePreState = m_eCurState;
+	}
+
+}
+void CPlayer::Release()
+{
+
+}
+void CPlayer::Player_Move_Frame()
+{
+	if (m_eCurState == IDLE)
+	{
+		m_tFrame.iStart = 3;
+		m_tFrame.iEnd = 3;
+	}
+	if (m_eCurState == RIGHT_MOVE)
+	{
+		if (m_tFrame.dwSpeed + m_tFrame.dwTime < GetTickCount())
+		{
+			++m_tFrame.iStart;
+			m_tFrame.dwTime = GetTickCount();
+		}
+
+		if (m_tFrame.iStart > m_tFrame.iEnd)
+		{
+			m_tFrame.iEnd = 6;
+			m_tFrame.iStart = 6;
+		}
+	}
+	if (m_eCurState == LEFT_MOVE)
+	{
+		if (m_tFrame.dwSpeed + m_tFrame.dwTime < GetTickCount())
+		{
+			--m_tFrame.iStart;
+			m_tFrame.dwTime = GetTickCount();
+		}
+
+		if (m_tFrame.iEnd < m_tFrame.iStart)
+		{
+			m_tFrame.iStart = 0;
+			m_tFrame.iEnd = 0;
+		}
+	}
+}
+void CPlayer::Offset()
+{
+	int	iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
+
+
+}
+void CPlayer::Insert_Player_Animation()
+{
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Player/playerMove.bmp", L"Player_DOWN");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Player/playerMove.bmp", L"Player_UP");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Player/playerMove.bmp", L"Player_LEFT");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Player/playerMove.bmp", L"Player_RIGHT");
+
+	m_pFrameKey = L"Player_DOWN";
+}
+
