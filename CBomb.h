@@ -1,5 +1,20 @@
 #pragma once
-class CBomb
+
+#include "CObj.h"
+
+class CBomb : public CObj
 {
+public:
+  enum STATE {LAUNCH, BOOM};
+public:
+  CBomb();
+  virtual ~CBomb();
+public:
+  // CObj을(를) 통해 상속됨
+  void Initialize() override;
+  int Update() override;
+  void Late_Update() override;
+  void Render(HDC hDC) override;
+  void Release() override;
 };
 

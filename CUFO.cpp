@@ -20,7 +20,7 @@ void CUFO::Initialize()
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Monster/enemyUFO.bmp", L"UFO");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Monster/deathExplosions.bmp", L"boom");
 
-	m_iHp = 1;
+	m_iHp = 30;
 	// 플레이어 크기 및 위치지정
 	m_tInfo.fCX = 53.f;
 	m_tInfo.fCY = 32.f;
@@ -32,6 +32,8 @@ void CUFO::Initialize()
 	m_tFrame.iMotion = 0;
 	m_tFrame.dwSpeed = 200;
 	m_tFrame.dwTime = GetTickCount();
+
+	m_iHp = 20;
 
 	m_fDistance = 100.f;
 
@@ -154,6 +156,8 @@ void CUFO::Late_Update()
 
 void CUFO::Render(HDC hDC)
 {
+	if (m_eCurState == IDLE)
+	{
 	HDC		hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
 	// 플레이어 렌더
 	GdiTransparentBlt(hDC,												// 복사 받을 DC
@@ -167,8 +171,8 @@ void CUFO::Render(HDC hDC)
 		(INT)m_tInfo.fCX,														// 복사할 이미지의 가로, 세로
 		(INT)m_tInfo.fCY,
 		RGB(255, 0, 255));													// 제거할 색상
-
-	if (m_eCurState == DEAD)
+	}
+	else
 	{
 		HDC		hMemDC2 = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
 		// 플레이어 렌더
@@ -220,18 +224,23 @@ bool CUFO::Anim_Dead()
 
 void CUFO::OnCollision(CObj* pOther)
 {
+	m_iHp--;
+
 	if (m_eCurState == DEAD)
 		return;
 
-	m_eCurState = DEAD;
-	m_bDead = true;
+	if(m_iHp<=0)
+	{
+		m_eCurState = DEAD;
+		m_bDead = true;
 
-	// 데드 스프라이트로 전환, 프레임 초기화
-	m_pFrameKey = L"boom";
+		// 데드 스프라이트로 전환, 프레임 초기화
+		m_pFrameKey = L"boom";
 
-	m_tFrame.iStart = 0;
-	m_tFrame.iEnd = 11;
-	m_tFrame.iMotion = 0;
-	m_tFrame.dwSpeed = 100;
-	m_tFrame.dwTime = GetTickCount();
+		m_tFrame.iStart = 0;
+		m_tFrame.iEnd = 11;
+		m_tFrame.iMotion = 0;
+		m_tFrame.dwSpeed = 100;
+		m_tFrame.dwTime = GetTickCount();
+	}
 }

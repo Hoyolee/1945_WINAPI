@@ -36,6 +36,10 @@ void CPlayer::Initialize()
 	m_fDistance = 100.f;
 	m_fBulletTime = 0.5f;
 
+	// 각종 아이템 개수
+	m_iLifeCount = 3;
+	m_iBombCount = 3;
+
 	// 플레이어의 프레임 설정
 	m_tFrame.iStart = 0;
 	m_tFrame.iEnd = 6;
@@ -46,6 +50,7 @@ void CPlayer::Initialize()
 	Insert_Player_Animation();
 
 	m_eCurState = IDLE;
+	m_bDead = false;
 }
 
 int CPlayer::Update()
@@ -56,23 +61,26 @@ int CPlayer::Update()
 
 	Move_Frame();
 
-	if (m_iHp == 0)
-		return OBJ_DEAD;
-
+	if (m_eCurState == DEAD)
+	{
+		if (Anim_Dead())
+		{
+			return OBJ_DEAD;
+		}
+		return OBJ_NOEVENT;
+	}
 	return OBJ_NOEVENT;
 }
 
 void CPlayer::Late_Update()
 {
 	Player_Move_Frame();
-
 }
 
 void CPlayer::Render(HDC hDC)
 {
 	HDC		hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
 	// 플레이어 렌더
-
 	GdiTransparentBlt(hDC,												// 복사 받을 DC
 		m_tRect.left,										// 복사 받을 공간의 LEFT	
 		m_tRect.top ,											// 복사 받을 공간의 TOP
@@ -248,6 +256,46 @@ void CPlayer::Insert_Player_Animation()
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Player/playerMove.bmp", L"Player_LEFT");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Player/playerMove.bmp", L"Player_RIGHT");
 
+	//플레이어 피격 모션
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Player/playerHit.bmp", L"Player_Boom");
+
 	m_pFrameKey = L"Player_DOWN";
 }
+void CPlayer::OnCollision(CObj* pOther)
+{
+	m_iHp--;
 
+	if (m_eCurState == DEAD)
+		return;
+
+	if (m_iHp <= 0)
+	{
+		m_eCurState = DEAD;
+		m_bDead = true;
+
+		m_pFrameKey = L"Player_Boom";
+
+		m_tFrame.iStart = 0;
+		m_tFrame.iEnd = 7;
+		m_tFrame.iMotion = 0;
+		m_tFrame.dwSpeed = 100;
+		m_tFrame.dwTime = GetTickCount();
+	}
+
+}
+
+bool CPlayer::Anim_Dead()
+{
+	if (!m_bDead)
+		return false;
+
+	if (m_tFrame.dwTime + m_tFrame.dwSpeed < GetTickCount())
+	{
+		++m_tFrame.iStart;
+		m_tFrame.dwTime = GetTickCount();
+
+		if (m_tFrame.iStart > m_tFrame.iEnd)
+			return true;
+	}
+	return false;
+}

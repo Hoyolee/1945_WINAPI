@@ -20,7 +20,7 @@ CEnemy::~CEnemy()
 void CEnemy::Initialize()
 {
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Monster/enemy.bmp", L"Enemy1");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Monster/deathExplosions_resized.bmp", L"EnemyDead");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Monster/ufoExplosion.bmp", L"EnemyDead");
 
 	m_iHp = 1;
 
@@ -29,14 +29,16 @@ void CEnemy::Initialize()
 	m_tInfo.fCY			= 34.f;
 
 	m_fTime					= GetTickCount();
-
 	m_fSpeed				= 7.0f;
+
+	m_iHp					  = 3;
 
 	m_fDistance     = 100.f;
 	m_fBulletTime   = 1.0f;
 
 	m_pFrameKey = L"Enemy1";
 
+	m_eCurState = IDLE;
 	m_bDead = false;
 }
 
@@ -89,7 +91,7 @@ void CEnemy::Render(HDC hDC)
 			(INT)m_tInfo.fCY,
 			RGB(255, 0, 255));													// 제거할 색상
 	}
-	if (m_eCurState == DEAD)
+	else
 	{
 		HDC		hMemDC2 = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
 		// 플레이어 렌더
@@ -110,7 +112,6 @@ void CEnemy::Render(HDC hDC)
 void CEnemy::Release()
 {
 }
-
 void CEnemy::Enemy_Move_Frame()
 {
 	if (m_tFrame.dwSpeed + m_tFrame.dwTime < GetTickCount())
@@ -122,7 +123,6 @@ void CEnemy::Enemy_Move_Frame()
 			m_tFrame.iStart = 0;
 	}
 }
-
 bool CEnemy::Anim_Dead()
 {
 	if (!m_biSDead)
@@ -141,18 +141,22 @@ bool CEnemy::Anim_Dead()
 
 void CEnemy::OnCollision(CObj* pOther)
 {
+	m_iHp--;
 
 	if (m_eCurState == DEAD)
 		return;
 
-	m_eCurState = DEAD;
-	m_biSDead = true;
+	if(m_iHp <= 0 )
+	{
+		m_eCurState = DEAD;
+		m_biSDead = true;
 
-	m_pFrameKey = L"EnemyDead";
+		m_pFrameKey = L"EnemyDead";
 
-	m_tFrame.iStart = 0;
-	m_tFrame.iEnd = 11;
-	m_tFrame.iMotion = 0;
-	m_tFrame.dwSpeed = 100;
-	m_tFrame.dwTime = GetTickCount();
+		m_tFrame.iStart = 0;
+		m_tFrame.iEnd = 11;
+		m_tFrame.iMotion = 0;
+		m_tFrame.dwSpeed = 100;
+		m_tFrame.dwTime = GetTickCount();
+	}
 }

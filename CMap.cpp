@@ -82,7 +82,7 @@ int CMap::Update()
     CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CEnemy>::Create(70.0f, 0.f));
     CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CEnemy>::Create(170.0f, 0.f));
 
-    CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CHeli>::Create(300.f, 0.f));
+    //CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CHeli>::Create(300.f, 0.f));
     ++iEnemyWave;
   }
 
