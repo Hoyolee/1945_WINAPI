@@ -118,6 +118,9 @@
     <Filter Include="소스 파일\Game_Object\Enemy\UFO">
       <UniqueIdentifier>{da3fb0b9-9c7d-492a-a95b-949ba9fcbe8a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Scene\Stage\StageUI\GameOverUI">
+      <UniqueIdentifier>{c3b1305e-7380-47da-8a51-443c3d3b2f02}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -231,6 +234,9 @@
     <ClInclude Include="CHeli.h">
       <Filter>소스 파일\Game_Object\Enemy\Helicopter</Filter>
     </ClInclude>
+    <ClInclude Include="CGameOver.h">
+      <Filter>소스 파일\Scene\Stage\StageUI\GameOverUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="1945.cpp">
@@ -325,6 +331,9 @@
     </ClCompile>
     <ClCompile Include="CHeli.cpp">
       <Filter>소스 파일\Game_Object\Enemy\Helicopter</Filter>
+    </ClCompile>
+    <ClCompile Include="CGameOver.cpp">
+      <Filter>소스 파일\Scene\Stage\StageUI\GameOverUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

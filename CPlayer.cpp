@@ -57,24 +57,56 @@ int CPlayer::Update()
 {
 	__super::Update_Rect();
 
-	Key_Input();
-
-	Move_Frame();
+	if (m_eCurState == RESPAWN)
+	{
+    m_pFrameKey = L"Player_DOWN";
+		Motion_Change();
+		Player_Move_Frame();
+		if(m_tInfo.fY > WINCY - 200.f)
+			m_tInfo.fY -= m_fSpeed;
+		else
+		{
+			m_eCurState = IDLE;
+    }
+	}
 
 	if (m_eCurState == DEAD)
 	{
-		if (Anim_Dead())
+    Motion_Change();
+		Player_Move_Frame();
+		m_iLifeCount--;
+		if(m_iLifeCount <= 0)
+		{ 
+			if (Anim_Dead())
+			{
+				return OBJ_DEAD;
+			}
+		}
+		else
 		{
-			return OBJ_DEAD;
+				m_tInfo.fY = WINCY + 100.f;
+				m_tInfo.fX = WINCX / 2.f;
+				m_eCurState = RESPAWN;
 		}
 		return OBJ_NOEVENT;
+	}
+	
+	if (m_eCurState == IDLE || m_eCurState == LEFT_MOVE || m_eCurState == RIGHT_MOVE)
+	{
+		Motion_Change();
+
+		Key_Input();
+
+		Player_Move_Frame();
 	}
 	return OBJ_NOEVENT;
 }
 
 void CPlayer::Late_Update()
 {
-	Player_Move_Frame();
+#ifdef _DEBUG
+	cout << m_eCurState << "\t " << m_iHp << "\t" << m_iLifeCount << endl;
+#endif // _DEBUG
 }
 
 void CPlayer::Render(HDC hDC)
@@ -93,7 +125,6 @@ void CPlayer::Render(HDC hDC)
 		(INT)m_tInfo.fCY,
 		RGB(255, 0, 255));													// 제거할 색상
 }
-
 void CPlayer::Key_Input()
 {
 	m_fBulletTime -= 1.0f / 15.f;
@@ -175,6 +206,14 @@ void CPlayer::Motion_Change()
 			m_tFrame.dwTime = GetTickCount();
 			break;
 
+		case RESPAWN:
+			m_tFrame.iStart = 3;
+			m_tFrame.iEnd = 3;
+			m_tFrame.iMotion = 0;
+			m_tFrame.dwSpeed = 200;
+			m_tFrame.dwTime = GetTickCount();
+			break;
+
 		case LEFT_MOVE:
 			m_tFrame.iStart = 3;
 			m_tFrame.iEnd = 0;
@@ -192,9 +231,10 @@ void CPlayer::Motion_Change()
 			break;
 
 		case DEAD:
+			m_pFrameKey = L"Player_Boom";
 			m_tFrame.iStart = 0;
-			m_tFrame.iEnd = 3;
-			m_tFrame.iMotion = 4;
+			m_tFrame.iEnd = 7;
+			m_tFrame.iMotion = 0;
 			m_tFrame.dwSpeed = 200;
 			m_tFrame.dwTime = GetTickCount();
 			break;
@@ -209,10 +249,9 @@ void CPlayer::Release()
 }
 void CPlayer::Player_Move_Frame()
 {
-	if (m_eCurState == IDLE)
+	if (m_eCurState == IDLE || m_eCurState == RESPAWN)
 	{
-		m_tFrame.iStart = 3;
-		m_tFrame.iEnd = 3;
+		m_tFrame.iStart = m_tFrame.iEnd;
 	}
 	if (m_eCurState == RIGHT_MOVE)
 	{
@@ -224,8 +263,7 @@ void CPlayer::Player_Move_Frame()
 
 		if (m_tFrame.iStart > m_tFrame.iEnd)
 		{
-			m_tFrame.iEnd = 6;
-			m_tFrame.iStart = 6;
+			m_tFrame.iStart = m_tFrame.iEnd;
 		}
 	}
 	if (m_eCurState == LEFT_MOVE)
@@ -234,13 +272,19 @@ void CPlayer::Player_Move_Frame()
 		{
 			--m_tFrame.iStart;
 			m_tFrame.dwTime = GetTickCount();
-		}
-
-		if (m_tFrame.iEnd < m_tFrame.iStart)
+		}	
+		if (m_tFrame.iStart < m_tFrame.iEnd)
 		{
-			m_tFrame.iStart = 0;
-			m_tFrame.iEnd = 0;
+			m_tFrame.iStart = m_tFrame.iEnd;
 		}
+	}
+	if (m_eCurState == DEAD)
+	{
+		if (m_tFrame.dwSpeed + m_tFrame.dwTime < GetTickCount())
+		{
+			++m_tFrame.iStart;
+			m_tFrame.dwTime = GetTickCount();
+    }
 	}
 }
 void CPlayer::Offset()
@@ -255,10 +299,8 @@ void CPlayer::Insert_Player_Animation()
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Player/playerMove.bmp", L"Player_UP");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Player/playerMove.bmp", L"Player_LEFT");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Player/playerMove.bmp", L"Player_RIGHT");
-
 	//플레이어 피격 모션
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Player/playerHit.bmp", L"Player_Boom");
-
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Player/Resize.bmp", L"Player_Boom");
 	m_pFrameKey = L"Player_DOWN";
 }
 void CPlayer::OnCollision(CObj* pOther)
@@ -283,7 +325,6 @@ void CPlayer::OnCollision(CObj* pOther)
 	}
 
 }
-
 bool CPlayer::Anim_Dead()
 {
 	if (!m_bDead)

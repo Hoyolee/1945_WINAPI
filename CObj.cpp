@@ -29,5 +29,3 @@ void CObj::Move_Frame()
 			m_tFrame.iEnd = 0;
 	}
 }
-
-// 틱당 프레임 이동 및 

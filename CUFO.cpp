@@ -149,9 +149,6 @@ int CUFO::Update()
 
 void CUFO::Late_Update()
 {
-#ifdef _DEBUG
-	cout << m_tInfo.fX << "\t" << m_tInfo.fY << endl;
-#endif // _DEBUG
 }
 
 void CUFO::Render(HDC hDC)

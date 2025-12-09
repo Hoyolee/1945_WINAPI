@@ -138,11 +138,10 @@ bool CEnemy::Anim_Dead()
 	}
 	return false; 
 }
-
 void CEnemy::OnCollision(CObj* pOther)
 {
-	m_iHp--;
-
+	--m_iHp;
+	
 	if (m_eCurState == DEAD)
 		return;
 
