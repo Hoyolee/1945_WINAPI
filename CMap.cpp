@@ -9,7 +9,7 @@
 #include "CStealthEnemy.h"
 #include "CHeli.h"
 #include "CUFO.h"
-
+#include "CPlayer.h"
 CMap::CMap():iEnemyWave(0)
 {
 }
@@ -17,8 +17,6 @@ CMap::CMap():iEnemyWave(0)
 CMap::~CMap()
 {
 }
-// 피격 타격 이펙트
-// 스코어 및 각종 폰트 출력
 
 void CMap::Initialize()
 { 
@@ -27,6 +25,9 @@ void CMap::Initialize()
   m_tInfo = { 300, 1300, (float)WINCX, 4288.f };
   isSpawned = false;
   CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/backGround.bmp", L"Ground");
+
+  // 캐릭터 생성
+  CObjMgr::Get_Instance()->AddObject(OBJ_PLAYER, CAbstractFactory<CPlayer>::Create(300, 600));
 }
 
 int CMap::Update()

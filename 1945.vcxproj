@@ -138,6 +138,7 @@
     <ClInclude Include="CEnemy.h" />
     <ClInclude Include="CEnemyBullet.h" />
     <ClInclude Include="CGameOver.h" />
+    <ClInclude Include="CGameOverFont.h" />
     <ClInclude Include="CHeli.h" />
     <ClInclude Include="CKeyMgr.h" />
     <ClInclude Include="CLifeUI.h" />
@@ -177,6 +178,7 @@
     <ClCompile Include="CEnemy.cpp" />
     <ClCompile Include="CEnemyBullet.cpp" />
     <ClCompile Include="CGameOver.cpp" />
+    <ClCompile Include="CGameOverFont.cpp" />
     <ClCompile Include="CHeli.cpp" />
     <ClCompile Include="CKeyMgr.cpp" />
     <ClCompile Include="CLifeUI.cpp" />

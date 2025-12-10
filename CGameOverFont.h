@@ -1,10 +1,10 @@
 #pragma once
 #include "CObj.h"
-class CGameOver :   public CObj
+class CGameOverFont : public CObj
 {
 public:
-  CGameOver();
-  virtual ~CGameOver();
+  CGameOverFont();
+  virtual ~CGameOverFont();
   // CObj을(를) 통해 상속됨
 public:
   void Initialize() override;

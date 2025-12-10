@@ -12,8 +12,8 @@ void CCollisionMgr::Collision_Rect(list<CObj*> _Dst, list<CObj*> _Src)
 		{
 			if (IntersectRect(&rc, Dst->Get_Rect(), Src->Get_Rect()))
 			{
-				Dst->OnCollision(Src);
-				Src->OnCollision(Dst);
+				Dst->OnCollision(Dst);
+				Src->OnCollision(Src);
 			}
 		}
 	}

@@ -1,39 +1,35 @@
 #include "pch.h"
-#include "CGameOver.h"
-
-#include "CBmpMgr.h"
-#include "CObjMgr.h"
-#include "CAbstractFactory.h"
-
 #include "CGameOverFont.h"
-CGameOver::CGameOver()
+#include "CBmpMgr.h"
+
+CGameOverFont::CGameOverFont()
 {
 }
 
-CGameOver::~CGameOver()
+CGameOverFont::~CGameOverFont()
 {
-  Release();
-}
-void CGameOver::Initialize()
-{
-  CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Title/blackScrren.bmp", L"GameOver");
-  m_tInfo = { 300,400,WINCX,WINCY };
 }
 
-int CGameOver::Update()
+void CGameOverFont::Initialize()
+{
+  CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Title/gameOver.bmp", L"GameOverFont");
+  m_tInfo = { WINCX > 1, WINCY > 2,558.f,67.f };
+}
+
+int CGameOverFont::Update()
 {
   __super::Update_Rect();
-  CObjMgr::Get_Instance()->AddObject(OBJ_GAMEOVER_UI, CAbstractFactory<CGameOverFont>::Create());
   return 0;
 }
 
-void CGameOver::Late_Update()
+void CGameOverFont::Late_Update()
 {
+
 }
 
-void CGameOver::Render(HDC hDC)
+void CGameOverFont::Render(HDC hDC)
 {
-  HDC		hGroundDC = CBmpMgr::Get_Instance()->Find_Image(L"GameOver");
+  HDC		hGroundDC = CBmpMgr::Get_Instance()->Find_Image(L"GameOverFont");
 
   GdiTransparentBlt(hDC,												// 복사 받을 DC
     m_tRect.left,										// 복사 받을 공간의 LEFT	
@@ -46,8 +42,9 @@ void CGameOver::Render(HDC hDC)
     (INT)m_tInfo.fCX,														// 복사할 이미지의 가로, 세로
     (INT)m_tInfo.fCY,
     RGB(255, 0, 255));	// 제거할 색상
+
 }
 
-void CGameOver::Release()
+void CGameOverFont::Release()
 {
 }

@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CLifeUI.h"
 #include "CBmpMgr.h"
+#include "CPlayer.h"
 
 CLifeUI::CLifeUI()
 {

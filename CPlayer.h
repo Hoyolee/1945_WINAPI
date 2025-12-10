@@ -4,7 +4,7 @@
 class CPlayer : public CObj
 {
 public:
-	enum STATE { IDLE, RESPAWN, LEFT_MOVE, RIGHT_MOVE, ATTACK, DEAD, ST_END };
+	enum STATE { IDLE, RESPAWN, LEFT_MOVE, RIGHT_MOVE, ATTACK, DEAD, DEADANMAITON,GAMEOVER, ST_END };
 
 public:
 	CPlayer();
@@ -18,10 +18,24 @@ public:
 	void Release() override;
 	void OnCollision(CObj* pOther) override;
 
+	// 충돌 허용 검사
+	bool isOnCollision();
+
+	// 무적 설정 (ms)
+	void Set_Invincible(DWORD dwDurationMs);
+
+public:
+  int  Get_LifeCount() { return m_iLifeCount; }
+  void Set_LifeCount(int iLifeCount) { m_iLifeCount = iLifeCount; }
+
+  int Get_BombCount() { return m_iBombCount; }
+  void Set_BombCount(int iBombCount) { m_iBombCount = iBombCount; }
+
+  STATE Get_State() { return m_eCurState; }
+
 public:
 	void Offset();
 	bool Anim_Dead();
-
 private:
 	void	Key_Input();
 	void	Motion_Change();

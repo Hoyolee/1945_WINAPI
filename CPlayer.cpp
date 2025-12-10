@@ -6,6 +6,7 @@
 #include "CScrollMgr.h"
 #include "CKeyMgr.h"
 #include "CBmpMgr.h"
+#include "CSceneMgr.h"
 #include "CCollisionMgr.h"
 
 // 플레이어가 사용하는 오브젝트 헤더
@@ -62,20 +63,19 @@ int CPlayer::Update()
     m_pFrameKey = L"Player_DOWN";
 		Motion_Change();
 		Player_Move_Frame();
+
 		if(m_tInfo.fY > WINCY - 200.f)
 			m_tInfo.fY -= m_fSpeed;
 		else
 		{
 			m_eCurState = IDLE;
-    }
+		}
 	}
 
 	if (m_eCurState == DEAD)
 	{
     Motion_Change();
-		Player_Move_Frame();
-		m_iLifeCount--;
-		if(m_iLifeCount <= 0)
+		if(m_iLifeCount < 0)
 		{ 
 			if (Anim_Dead())
 			{
@@ -84,9 +84,12 @@ int CPlayer::Update()
 		}
 		else
 		{
+			if(Anim_Dead())
+			{ 
 				m_tInfo.fY = WINCY + 100.f;
 				m_tInfo.fX = WINCX / 2.f;
 				m_eCurState = RESPAWN;
+			}
 		}
 		return OBJ_NOEVENT;
 	}
@@ -119,7 +122,7 @@ void CPlayer::Render(HDC hDC)
 		(int)m_tInfo.fCX,														// 복사 받을 공간의 가로 
 		(int)m_tInfo.fCY,														// 복사 받을 공간의 세로 
 		hMemDC,																			// 복사 할 DC
-		m_tFrame.iStart * (int)m_tInfo.fCX,					// 복사할 이미지의 LEFT, TOP
+		m_tFrame.iStart  * (int)m_tInfo.fCX,					// 복사할 이미지의 LEFT, TOP
 		m_tFrame.iMotion * (int)m_tInfo.fCY,
 		(INT)m_tInfo.fCX,														// 복사할 이미지의 가로, 세로
 		(INT)m_tInfo.fCY,
@@ -305,6 +308,9 @@ void CPlayer::Insert_Player_Animation()
 }
 void CPlayer::OnCollision(CObj* pOther)
 {
+	if(!isOnCollision())
+    return;
+
 	m_iHp--;
 
 	if (m_eCurState == DEAD)
@@ -312,6 +318,8 @@ void CPlayer::OnCollision(CObj* pOther)
 
 	if (m_iHp <= 0)
 	{
+		--m_iLifeCount;
+
 		m_eCurState = DEAD;
 		m_bDead = true;
 
@@ -320,10 +328,13 @@ void CPlayer::OnCollision(CObj* pOther)
 		m_tFrame.iStart = 0;
 		m_tFrame.iEnd = 7;
 		m_tFrame.iMotion = 0;
-		m_tFrame.dwSpeed = 100;
+		m_tFrame.dwSpeed = 200;
 		m_tFrame.dwTime = GetTickCount();
 	}
+	else
+	{
 
+	}
 }
 bool CPlayer::Anim_Dead()
 {
@@ -339,4 +350,15 @@ bool CPlayer::Anim_Dead()
 			return true;
 	}
 	return false;
+}
+
+bool CPlayer::isOnCollision()
+{
+	if (m_eCurState == RESPAWN)
+		return false;
+
+	if (m_eCurState == DEAD)
+		return false;
+
+	return true;
 }
