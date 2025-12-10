@@ -147,7 +147,7 @@ void CEnemy::OnCollision(CObj* pOther)
 	if (m_eCurState == DEAD)
 		return;
 
-  CObjMgr::Get_Instance()->Get_Object(OBJ_STAGE_UI).front()->Add_Score(m_iScore);
+  CObjMgr::Get_Instance()->Get_Object(OBJ_STAGE_UI).back()->Add_Score(m_iScore);
 
 	if(m_iHp <= 0 )
 	{

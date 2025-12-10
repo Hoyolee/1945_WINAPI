@@ -7,16 +7,23 @@ CScoreUI::CScoreUI()
 
 CScoreUI::~CScoreUI()
 {
+	Release();
 }
 
 void CScoreUI::Initialize()
 {
 	m_iScore = 0;
+
+	int nFonts = AddFontResourceExW(
+		L"Font/strikers-1945-extended.otf"
+		, FR_PRIVATE
+		, 0);
+
 }
 
 int CScoreUI::Update()
 {
-  return 0;
+	return 0;
 }
 
 void CScoreUI::Late_Update()
@@ -25,23 +32,38 @@ void CScoreUI::Late_Update()
 
 void CScoreUI::Render(HDC hDC)
 {
-	HFONT hFont = CreateFontW(
-		35, 0, 0, 0, 0, FALSE, FALSE, FALSE,
-		DEFAULT_CHARSET, OUT_OUTLINE_PRECIS,
-		CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY,
-		VARIABLE_PITCH, NULL);
+	int size = 32;
 
+	HFONT hFont = CreateFontW(
+		32,                
+		0, 0, 0,
+		FW_BOLD,            
+		FALSE, FALSE, FALSE,
+		DEFAULT_CHARSET,
+		OUT_TT_PRECIS,
+		CLIP_DEFAULT_PRECIS,
+		CLEARTYPE_QUALITY,
+		VARIABLE_PITCH,
+		L"Strikers 1945 Extended"   
+
+	);
 
 	HFONT old = (HFONT)SelectObject(hDC, hFont);
 
-	WCHAR title[1024];
-	int iTitle = 1946;
+	COLORREF clr = RGB(255, 255, 255);
 
-	wsprintfW(title, L"160기 화이팅");
-	TextOutW(hDC, 25, 50, title, lstrlen(title));
+	SetTextColor(hDC, clr);
+	SetBkMode(hDC, TRANSPARENT);
 
+	WCHAR buf[64];
+	wsprintfW(buf, L"SCORE: %d", m_iScore);
+	TextOutW(hDC, 25, 50, buf, lstrlenW(buf));
+
+	SelectObject(hDC, old);
+	DeleteObject(hFont);
 }
 
 void CScoreUI::Release()
 {
+	RemoveFontResourceExW(L"Font/strikers-1945-extended.otf", FR_PRIVATE, 0);
 }

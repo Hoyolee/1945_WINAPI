@@ -124,6 +124,9 @@
     <Filter Include="소스 파일\Scene\GameOver">
       <UniqueIdentifier>{8c444795-e30c-4823-8152-a7aefdd4ca94}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Mgr\SoundMgr">
+      <UniqueIdentifier>{518894f0-d626-44a1-9ab9-79470ce7e252}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -243,6 +246,9 @@
     <ClInclude Include="CScoreUI.h">
       <Filter>소스 파일\Scene\Stage\StageUI\ScoreUI</Filter>
     </ClInclude>
+    <ClInclude Include="CSoundMgr.h">
+      <Filter>소스 파일\Mgr\SoundMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="1945.cpp">
@@ -343,6 +349,9 @@
     </ClCompile>
     <ClCompile Include="CScoreUI.cpp">
       <Filter>소스 파일\Scene\Stage\StageUI\ScoreUI</Filter>
+    </ClCompile>
+    <ClCompile Include="CSoundMgr.cpp">
+      <Filter>소스 파일\Mgr\SoundMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

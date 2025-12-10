@@ -153,6 +153,7 @@
     <ClInclude Include="CSceneMgr.h" />
     <ClInclude Include="CScoreUI.h" />
     <ClInclude Include="CScrollMgr.h" />
+    <ClInclude Include="CSoundMgr.h" />
     <ClInclude Include="CStage.h" />
     <ClInclude Include="CStart.h" />
     <ClInclude Include="CStealthEnemy.h" />
@@ -193,6 +194,7 @@
     <ClCompile Include="CSceneMgr.cpp" />
     <ClCompile Include="CScoreUI.cpp" />
     <ClCompile Include="CScrollMgr.cpp" />
+    <ClCompile Include="CSoundMgr.cpp" />
     <ClCompile Include="CStage.cpp" />
     <ClCompile Include="CStart.cpp" />
     <ClCompile Include="CStealthEnemy.cpp" />
