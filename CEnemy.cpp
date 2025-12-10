@@ -22,6 +22,8 @@ void CEnemy::Initialize()
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Monster/enemy.bmp", L"Enemy1");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Monster/ufoExplosion.bmp", L"EnemyDead");
 
+	m_iScore = 100;
+	
 	m_iHp = 1;
 
 	// 플레이어 크기 및 위치지정
@@ -144,6 +146,8 @@ void CEnemy::OnCollision(CObj* pOther)
 	
 	if (m_eCurState == DEAD)
 		return;
+
+  CObjMgr::Get_Instance()->Get_Object(OBJ_STAGE_UI).front()->Add_Score(m_iScore);
 
 	if(m_iHp <= 0 )
 	{

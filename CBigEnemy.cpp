@@ -19,6 +19,7 @@ void CBigEnemy::Initialize()
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Monster/enemy2.bmp", L"Enemy2");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Monster/Big_Enemy_Explosion.bmp", L"EnemyExplode");
 
+	m_iScore = 500;
 	m_iHp = 10;
 	// 플레이어 크기 및 위치지정
 	m_tInfo.fCX = 153.f;
@@ -155,6 +156,9 @@ void CBigEnemy::OnCollision(CObj* pOther)
 	m_iHp--;
 	if (m_eCurState == DEAD)
 		return;
+
+	CObjMgr::Get_Instance()->Get_Object(OBJ_STAGE_UI).front()->Add_Score(m_iScore);
+
 	if (m_iHp <= 0)
 	{
 		m_eCurState = DEAD;

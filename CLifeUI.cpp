@@ -14,13 +14,17 @@ CLifeUI::~CLifeUI()
 
 void CLifeUI::Initialize()
 {
-  m_tInfo = { 50,100, 43,30 };
+  m_tInfo = { 0, 0, 43,30 };
   CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Player/Player_Tool/playerLifeCount.bmp", L"Life");
+	m_bDead = false;
 }
 
 int CLifeUI::Update()
 {
   __super::Update_Rect();
+
+	if(m_bDead)
+    return OBJ_DEAD;
 
   return OBJ_NOEVENT;
 }

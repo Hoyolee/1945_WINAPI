@@ -18,8 +18,7 @@ public:
 	void Release() override;
 	void OnCollision(CObj* pOther) override;
 
-	// 충돌 허용 검사
-	bool isOnCollision();
+  bool isOnCollision();
 
 	// 무적 설정 (ms)
 	void Set_Invincible(DWORD dwDurationMs);

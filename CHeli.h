@@ -14,5 +14,8 @@ public:
   void Render(HDC hDC) override;
   void Release() override;
   void Heli_Move_Frame();
+  void OnCollision(CObj* pOther) override;
+private:
+  STATE m_eCurState;
 };
 

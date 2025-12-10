@@ -20,6 +20,8 @@ void CHeli::Initialize()
 
 	// 플레이어 크기 및 위치지정
 
+	m_iScore = 300;
+
 	m_iHp = 1;
 	m_tInfo.fCX = 34.f;
 	m_tInfo.fCY = 25.f;
@@ -31,6 +33,8 @@ void CHeli::Initialize()
 	m_tFrame.iMotion = 1;
 	m_tFrame.dwSpeed = 200;
 	m_tFrame.dwTime = GetTickCount();
+
+	m_eCurState = IDLE;
 
 	m_fDistance = 100.f;
 
@@ -113,6 +117,31 @@ void CHeli::Heli_Move_Frame()
 		if (m_tFrame.iStart > m_tFrame.iEnd)
 			m_tFrame.iStart = 0;
 	}
+}
+
+void CHeli::OnCollision(CObj* pOther)
+{
+		m_iHp--;
+		if (m_eCurState == DEAD)
+			return;
+
+		CObjMgr::Get_Instance()->Get_Object(OBJ_STAGE_UI).front()->Add_Score(m_iScore);
+
+		if (m_iHp <= 0)
+		{
+			m_eCurState = DEAD;
+			m_bDead = true;
+
+			m_pFrameKey = L"EnemyExplode";
+
+			m_tFrame.iStart = 0;
+			m_tFrame.iEnd = 11;
+			m_tFrame.iMotion = 0;
+			m_tFrame.dwSpeed = 50;
+			m_tFrame.dwTime = GetTickCount();
+		
+	}
+
 }
 
 void CHeli::Release()

@@ -11,6 +11,7 @@
 #include "CSceneMgr.h"
 #include "CTileMgr.h"
 #include "CBombUI.h"
+#include "CScoreUI.h"
 #include "CGameOver.h"
 
 CStage::CStage()
@@ -34,7 +35,8 @@ void CStage::Initialize()
 	CObjMgr::Get_Instance()->AddObject(OBJ_LIFE_UI, CAbstractFactory<CLifeUI>::Create(50, 100));
 	CObjMgr::Get_Instance()->AddObject(OBJ_LIFE_UI, CAbstractFactory<CLifeUI>::Create(100, 100));
 	CObjMgr::Get_Instance()->AddObject(OBJ_LIFE_UI, CAbstractFactory<CLifeUI>::Create(150, 100));
-	
+
+	CObjMgr::Get_Instance()->AddObject(OBJ_STAGE_UI, CAbstractFactory<CScoreUI>::Create());
 	// 보스 생성
 	//CObjMgr::Get_Instance()->AddObject(OBJ_BOSS, CAbstractFactory<CBoss>::Create(300.f,200.f));	
 	//CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CEnemy>::Create(300.f, 100.f));
@@ -44,17 +46,10 @@ int CStage::Update()
 {
 	CObjMgr::Get_Instance()->Update();
 	  
-	int iLife = dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Object(OBJ_PLAYER).front())->Get_LifeCount();
-
-	dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Object(OBJ_PLAYER).front())->Get_State();
-	//if (dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Object(OBJ_PLAYER).front())->Get_State() == 5)
-	//{
-	//  float m_fTime = GetTickCount();
-	//	if(m_fTime + 4500 > GetTickCount())
-	//	CObjMgr::Get_Instance()->AddObject(OBJ_GAMEOVER_UI, CAbstractFactory<CGameOver>::Create(300, WINCY > 1));
-	//	CObjMgr::Get_Instance()->Delete_ID(OBJ_MONSTER);
-	//}
-
+	// 씬 변경관련
+	//int iLife = dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Object(OBJ_PLAYER).front())->Get_LifeCount();
+	//dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Object(OBJ_PLAYER).front())->Get_State();
+	
 	return OBJ_NOEVENT;
 }
 
@@ -109,4 +104,5 @@ void CStage::Release()
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_BULLET);
   CObjMgr::Get_Instance()->Delete_ID(OBJ_STAGE_UI);
   CObjMgr::Get_Instance()->Delete_ID(OBJ_BOSS);
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_LIFE_UI);
 }

@@ -9,6 +9,7 @@ public:
 	virtual ~CObj();
 
 public:
+	enum STATE {IDLE, DEAD};
 	void		Set_Pos(float fX, float fY)
 	{
 		m_tInfo.fX = fX;
@@ -34,6 +35,9 @@ public:
 
 	float		Get_Angle() { return m_fAngle; }
 	void		Set_Angle(float fAngle) { m_fAngle = fAngle; }
+
+  void		Add_Score(int Score) { m_iScore += Score; }
+
 public:
 	virtual void	Initialize()		PURE;
 	virtual int		Update()				PURE;
@@ -61,6 +65,7 @@ protected:
 
 	int			m_iHp;
 	int			m_iAtk;
+  int	    m_iScore;
 
 	CObj* m_pTarget;
 	const TCHAR* m_pFrameKey;

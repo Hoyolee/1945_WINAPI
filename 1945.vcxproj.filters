@@ -198,9 +198,6 @@
     <ClInclude Include="CLifeUI.h">
       <Filter>소스 파일\Scene\Stage\StageUI\LifeUI</Filter>
     </ClInclude>
-    <ClInclude Include="CScoreUI.h">
-      <Filter>소스 파일\Scene\Stage\StageUI\ScoreUI</Filter>
-    </ClInclude>
     <ClInclude Include="CStart.h">
       <Filter>소스 파일\Scene\MainMenu\CMainMenuUI\StartButton</Filter>
     </ClInclude>
@@ -242,6 +239,9 @@
     </ClInclude>
     <ClInclude Include="CGameOverFont.h">
       <Filter>소스 파일\Scene\Stage\StageUI\GameOverUI</Filter>
+    </ClInclude>
+    <ClInclude Include="CScoreUI.h">
+      <Filter>소스 파일\Scene\Stage\StageUI\ScoreUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -299,9 +299,6 @@
     <ClCompile Include="CLifeUI.cpp">
       <Filter>소스 파일\Scene\Stage\StageUI\LifeUI</Filter>
     </ClCompile>
-    <ClCompile Include="CScoreUI.cpp">
-      <Filter>소스 파일\Scene\Stage\StageUI\ScoreUI</Filter>
-    </ClCompile>
     <ClCompile Include="CStart.cpp">
       <Filter>소스 파일\Scene\MainMenu\CMainMenuUI\StartButton</Filter>
     </ClCompile>
@@ -343,6 +340,9 @@
     </ClCompile>
     <ClCompile Include="CGameOverFont.cpp">
       <Filter>소스 파일\Scene\Stage\StageUI\GameOverUI</Filter>
+    </ClCompile>
+    <ClCompile Include="CScoreUI.cpp">
+      <Filter>소스 파일\Scene\Stage\StageUI\ScoreUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

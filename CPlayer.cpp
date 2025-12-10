@@ -128,6 +128,7 @@ void CPlayer::Render(HDC hDC)
 		(INT)m_tInfo.fCY,
 		RGB(255, 0, 255));													// 제거할 색상
 }
+
 void CPlayer::Key_Input()
 {
 	m_fBulletTime -= 1.0f / 15.f;
@@ -319,6 +320,8 @@ void CPlayer::OnCollision(CObj* pOther)
 	if (m_iHp <= 0)
 	{
 		--m_iLifeCount;
+		
+		CObjMgr::Get_Instance()->Get_Object(OBJ_LIFE_UI).back()->Set_Dead();
 
 		m_eCurState = DEAD;
 		m_bDead = true;
@@ -330,10 +333,6 @@ void CPlayer::OnCollision(CObj* pOther)
 		m_tFrame.iMotion = 0;
 		m_tFrame.dwSpeed = 200;
 		m_tFrame.dwTime = GetTickCount();
-	}
-	else
-	{
-
 	}
 }
 bool CPlayer::Anim_Dead()
@@ -351,7 +350,6 @@ bool CPlayer::Anim_Dead()
 	}
 	return false;
 }
-
 bool CPlayer::isOnCollision()
 {
 	if (m_eCurState == RESPAWN)

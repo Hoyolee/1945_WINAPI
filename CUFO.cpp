@@ -27,6 +27,8 @@ void CUFO::Initialize()
 	m_fTime = GetTickCount();
 	m_fSpeed = 5.5f;
 
+	m_iScore = 200;
+
 	m_tFrame.iStart = 0;
 	m_tFrame.iEnd = 9;
 	m_tFrame.iMotion = 0;
@@ -225,6 +227,8 @@ void CUFO::OnCollision(CObj* pOther)
 
 	if (m_eCurState == DEAD)
 		return;
+
+	CObjMgr::Get_Instance()->Get_Object(OBJ_STAGE_UI).front()->Add_Score(m_iScore);
 
 	if(m_iHp<=0)
 	{
