@@ -8,7 +8,8 @@
 #include "CBmpMgr.h"
 #include "CSceneMgr.h"
 #include "CCollisionMgr.h"
-
+#include "CSoundMgr.h"
+#include "CKeyMgr.h"
 // 플레이어가 사용하는 오브젝트 헤더
 #include "CBomb.h"
 //#include "CLife.h"
@@ -33,6 +34,7 @@ void CPlayer::Initialize()
 	m_tInfo.fCY = 40.f;
 
 	m_fSpeed = 4.f;
+	m_bIsLifeUI = false;
 
 	m_fDistance = 100.f;
 	m_fBulletTime = 0.5f;
@@ -47,6 +49,8 @@ void CPlayer::Initialize()
 	m_tFrame.iMotion = 0;
 	m_tFrame.dwSpeed = 200;
 	m_tFrame.dwTime = GetTickCount();
+
+	m_fTime = GetTickCount();
 
 	Insert_Player_Animation();
 
@@ -75,6 +79,7 @@ int CPlayer::Update()
 	if (m_eCurState == DEAD)
 	{
     Motion_Change();
+		CSoundMgr::Get_Instance()->PlaySound(L"Object_Dead.mp3", SOUND_EFFECT, 0.25f);
 		if(m_iLifeCount < 0)
 		{ 
 			if (Anim_Dead())
@@ -185,13 +190,15 @@ void CPlayer::Key_Input()
 		m_pFrameKey = L"Player_LEFT";
 		m_eCurState = LEFT_MOVE;
 	}
-	 if (GetAsyncKeyState(VK_SPACE))
+	if (CKeyMgr::Get_Instance()->Key_Pressing(VK_SPACE))
 	{
-		 if (m_fBulletTime <= 0.f)
+		if (m_fBulletTime <= 0.f)
 		{
 			CObjMgr::Get_Instance()->AddObject(OBJ_BULLET, CAbstractFactory<CBullet>::Create(m_tInfo.fX,m_tInfo.fY));
 			m_fBulletTime = 0.5f;
 		}
+		if(m_fTime + 1000> GetTickCount())
+	   CSoundMgr::Get_Instance()->StopSound(SOUND_EFFECT);
 	} 
 	else
 		m_eCurState = IDLE;
@@ -318,10 +325,16 @@ void CPlayer::OnCollision(CObj* pOther)
 		return;
 
 	if (m_iHp <= 0)
-	{
+	{		
 		--m_iLifeCount;
-		
-		CObjMgr::Get_Instance()->Get_Object(OBJ_LIFE_UI).back()->Set_Dead();
+
+		m_iCount++;
+
+		if (m_iCount == 3)
+			m_bIsLifeUI = true;
+
+		if(!m_bIsLifeUI)
+			CObjMgr::Get_Instance()->Get_Object(OBJ_LIFE_UI).back()->Set_Dead();
 
 		m_eCurState = DEAD;
 		m_bDead = true;

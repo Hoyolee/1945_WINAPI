@@ -13,7 +13,9 @@
 #include "CBombUI.h"
 #include "CScoreUI.h"
 #include "CGameOver.h"
+#include "CSoundMgr.h"
 
+float sVolume = 0.25f;
 CStage::CStage()
 {
 }
@@ -25,6 +27,8 @@ CStage::~CStage()
 
 void CStage::Initialize()
 {
+	CSoundMgr::Get_Instance()->PlaySound(L"gameStart.mp3", SOUND_EFFECT, 0.1f);
+
 	// 배경 이미지
 	CObjMgr::Get_Instance()->AddObject(OBJ_STAGE_UI, CAbstractFactory<CMap>::Create(300, 0));
 
@@ -105,4 +109,5 @@ void CStage::Release()
   CObjMgr::Get_Instance()->Delete_ID(OBJ_STAGE_UI);
   CObjMgr::Get_Instance()->Delete_ID(OBJ_BOSS);
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_LIFE_UI);
+	CSoundMgr::Get_Instance()->Destroy_Instance();
 }

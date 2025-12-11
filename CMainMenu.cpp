@@ -6,7 +6,10 @@
 #include "CKeyMgr.h"
 #include "CScrollMgr.h"
 #include "CSceneMgr.h"
+#include "CSoundMgr.h"
+#include "CAbstractFactory.h"
 
+float fVolume = 0.25f;
 CMainMenu::CMainMenu()
 {
 }
@@ -18,10 +21,11 @@ CMainMenu::~CMainMenu()
 
 void CMainMenu::Initialize()
 {
+	CSoundMgr::Get_Instance()->PlaySound(L"Logo.mp3", SOUND_EFFECT, fVolume);
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Title/inGameStart.bmp", L"Menu");
-	pStart = new CStart;
-	pStart->Initialize();
-  CObjMgr::Get_Instance()->AddObject(OBJ_MAIN_UI, pStart);
+
+
+	CObjMgr::Get_Instance()->AddObject(OBJ_MAIN_UI, CAbstractFactory<CStart>::Create());
 }
 
 int CMainMenu::Update()
@@ -61,4 +65,5 @@ void CMainMenu::Render(HDC hDC)
 void CMainMenu::Release()
 {
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_MAIN_UI);
+  CSoundMgr::Get_Instance()->StopSound(SOUND_EFFECT);
 }

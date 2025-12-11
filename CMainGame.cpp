@@ -7,6 +7,8 @@
 #include "CKeyMgr.h"
 #include "CObjMgr.h"
 
+#include "CSoundMgr.h"
+
 CMainGame::CMainGame()
   : m_iFPS(0), m_dwTime(GetTickCount())
 {
@@ -21,7 +23,7 @@ CMainGame::~CMainGame()
 void CMainGame::Initialize()
 {
   m_hDC = GetDC(g_hWnd);
-
+	CSoundMgr::Get_Instance()->Initialize();
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Title/inGameStart.bmp", L"Back");
 	CSceneMgr::Get_Instance()->Scene_Change(SC_MENU);
 

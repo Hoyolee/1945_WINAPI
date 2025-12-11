@@ -24,6 +24,7 @@ void CSoundMgr::Initialize()
 
 	LoadSoundFile();
 }
+
 void CSoundMgr::Release()
 {
 	for (auto& Mypair : m_mapSound)
@@ -44,7 +45,7 @@ void CSoundMgr::PlaySound(const TCHAR* pSoundKey, CHANNELID eID, float fVolume)
 {
 	map<TCHAR*, FMOD_SOUND*>::iterator iter;
 
-	// iter = find_if(m_mapSound.begin(), m_mapSound.end(), CTag_Finder(pSoundKey));
+	//iter = find_if(m_mapSound.begin(), m_mapSound.end(), CTag_Finder(pSoundKey));
 	iter = find_if(m_mapSound.begin(), m_mapSound.end(),
 		[&](auto& iter)->bool
 		{
@@ -109,14 +110,14 @@ void CSoundMgr::LoadSoundFile()
 	_finddata_t fd;
 
 	// _findfirst : <io.h>에서 제공하며 사용자가 설정한 경로 내에서 가장 첫 번째 파일을 찾는 함수
-	long handle = _findfirst("../Sound/*.*", &fd);
+	long handle = _findfirst("Sound/*.*", &fd);
 
 	if (handle == -1)
 		return;
 
 	int iResult = 0;
 
-	char szCurPath[128] = "../Sound/";
+	char szCurPath[128] = "Sound/";
 	char szFullPath[128] = "";
 
 	while (iResult != -1)

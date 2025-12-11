@@ -5,6 +5,7 @@
 #include "CAbstractFactory.h"
 #include "CEnemyBullet.h"
 #include "CBigBullet.h"
+#include "CSoundMgr.h"
 
 CBigEnemy::CBigEnemy()
 {
@@ -25,7 +26,7 @@ void CBigEnemy::Initialize()
 	m_tInfo.fCX = 153.f;
 	m_tInfo.fCY = 134.f;
 	m_fTime = GetTickCount();
-	m_fSpeed = 2.f;
+	m_fSpeed = 4.f;
 
 	m_fDistance = 100.f;
 
@@ -41,6 +42,7 @@ int CBigEnemy::Update()
 	{
 		if (Anim_Dead())
 		{
+			CSoundMgr::Get_Instance()->PlaySound(L"Object_Dead.mp3", SOUND_EFFECT, 0.25f);
 			return OBJ_DEAD;
 		}
 		return OBJ_NOEVENT;
@@ -71,7 +73,7 @@ int CBigEnemy::Update()
 				}
 			}
 		}
-		if (m_fTime + 250 < GetTickCount())
+		if (m_fTime + 1000 < GetTickCount())
 		{
 			float fWidth(0.f), fHeight(0.f);
 			fWidth = CObjMgr::Get_Instance()->Get_Object(OBJ_PLAYER).front()->Get_Info()->fX - m_tInfo.fX;
@@ -81,8 +83,6 @@ int CBigEnemy::Update()
 			m_fTime = GetTickCount();
 		}
 	}
-	
-	
     return OBJ_NOEVENT;
 }
 

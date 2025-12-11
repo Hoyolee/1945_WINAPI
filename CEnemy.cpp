@@ -8,7 +8,7 @@
 #include "CCollisionMgr.h"
 #include "CAbstractFactory.h"
 #include "CPlayer.h"
-
+#include "CSoundMgr.h"
 CEnemy::CEnemy():m_eCurState(IDLE)
 {
 }
@@ -142,6 +142,7 @@ bool CEnemy::Anim_Dead()
 }
 void CEnemy::OnCollision(CObj* pOther)
 {
+  CSoundMgr::Get_Instance()->PlaySound(L"Hit.mp3", SOUND_EFFECT, 0.25f);
 	--m_iHp;
 	
 	if (m_eCurState == DEAD)
@@ -153,6 +154,8 @@ void CEnemy::OnCollision(CObj* pOther)
 	{
 		m_eCurState = DEAD;
 		m_biSDead = true;
+
+		CSoundMgr::Get_Instance()->PlaySound(L"Object_Dead.mp3", SOUND_EFFECT, 0.25f);
 
 		m_pFrameKey = L"EnemyDead";
 

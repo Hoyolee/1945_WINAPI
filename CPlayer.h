@@ -46,6 +46,8 @@ private:
 	int					m_iLife;
 	int					m_iBombCount;
 	int					m_iLifeCount;
+	int         m_iCount;
+	bool				m_bIsLifeUI ;
 
 	float				m_fTime;
 	float				m_fBulletTime;

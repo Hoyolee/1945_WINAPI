@@ -10,6 +10,11 @@
 #include "CHeli.h"
 #include "CUFO.h"
 #include "CPlayer.h"
+#include "CSoundMgr.h"
+#include "CBoss.h"
+
+float Volumne = 0.3f;
+
 CMap::CMap():iEnemyWave(0)
 {
 }
@@ -25,7 +30,7 @@ void CMap::Initialize()
   m_tInfo = { 300, 1300, (float)WINCX, 4288.f };
   isSpawned = false;
   CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/backGround.bmp", L"Ground");
-
+  CSoundMgr::Get_Instance()->PlaySound(L"gameStart.mp3", SOUND_BGM, Volumne);
   // 캐릭터 생성
   CObjMgr::Get_Instance()->AddObject(OBJ_PLAYER, CAbstractFactory<CPlayer>::Create(300, 600));
 }
@@ -34,7 +39,6 @@ int CMap::Update()
 {
   __super::Update_Rect();
   
-  float CScrollY = CScrollMgr::Get_Instance()->Get_ScrollY();
 
   DWORD m_fSpawnTime = GetTickCount();
   float fElapsedTime = m_fSpawnTime - m_fTime;
@@ -68,6 +72,10 @@ int CMap::Update()
   {
     CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CUFO>::Create(450.f, 0.f));
     CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CUFO>::Create(150.f, 0.f));
+   
+    CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CEnemy>::Create(120.0f, -70.f)); 
+    CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CEnemy>::Create(70.0f, 0.f));
+    CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CEnemy>::Create(170.0f, 0.f));
     ++iEnemyWave;
   }
 
@@ -87,6 +95,20 @@ int CMap::Update()
     ++iEnemyWave;
   }
 
+  if(m_fTime + 20000 == m_fSpawnTime && iEnemyWave == 5)
+  {
+    CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CBigEnemy>::Create(150.f, 0.f));
+    CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CBigEnemy>::Create(450.f, 0.f));
+    ++iEnemyWave;
+  }
+
+  if(m_fTime + 25000 == m_fSpawnTime)
+  {
+    CSoundMgr::Get_Instance()->StopAll();
+    CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CBoss>::Create(300.f, 0.f));
+    CSoundMgr::Get_Instance()->PlayBGM(L"Boss_BGM.mp3", 0.25);
+    ++iEnemyWave;
+  }
 
   return OBJ_NOEVENT;
 }
