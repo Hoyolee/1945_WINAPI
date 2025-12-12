@@ -33,7 +33,7 @@ void CEnemy::Initialize()
 	m_fTime					= GetTickCount();
 	m_fSpeed				= 7.0f;
 
-	m_iHp					  = 3;
+	m_iHp						= 2;
 
 	m_fDistance     = 100.f;
 	m_fBulletTime   = 1.0f;

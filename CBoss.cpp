@@ -6,8 +6,9 @@
 #include "CEnemyBullet.h"
 #include "CAbstractFactory.h"
 #include "CCollisionMgr.h"
-#include "CBullet.h"
 #include "CPlayer.h"
+#include "CBigBullet.h"
+
 
 CBoss::CBoss():m_eCurState(IDLE),m_ePreState(ST_END)
 {
@@ -28,6 +29,8 @@ void CBoss::Initialize()
 
 	m_fAngle = 10.f;
 	
+	m_iHp = 50.f;
+
 	m_fDistance = 100.f;
 
 	m_tFrame.iStart = 0;
@@ -59,7 +62,8 @@ void CBoss::Late_Update()
 
 void CBoss::Render(HDC hDC)
 {
-	if (m_eCurState == IDLE)
+	if (m_eCurState == IDLE || m_eCurState == MOVE || m_eCurState == ATTACK ||
+			m_eCurState == PATTERN1 || m_eCurState == PATTERN2)
 	{
 		HDC		hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"Boss");
 
@@ -96,6 +100,22 @@ void CBoss::Render(HDC hDC)
 
 void CBoss::Release()
 {
+}
+
+void CBoss::Pattern1_Bullet_Rain()
+{
+	if (m_tInfo.fX >= 200.f && m_tInfo.fY <= 200.f)
+	{
+		m_tInfo.fX -= m_fSpeed;
+		m_tInfo.fY += m_fSpeed;
+	}
+	if (m_tInfo.fX <= 200.f && m_tInfo.fY >= 200.f)
+	{
+		m_tInfo.fX += m_fSpeed;
+		m_tInfo.fY -= m_fSpeed;
+	}
+	CObjMgr::Get_Instance()->AddObject(OBJ_BOSSBULLET, CAbstractFactory<CBigBullet>::Create(m_tInfo.fX, m_tInfo.fY));
+
 }
 
 void CBoss::Boss_Frame()
@@ -142,12 +162,11 @@ void CBoss::Sector_Pattern()
 	m_tPosin.y = long(m_tInfo.fY - sinf(m_fAngle * (PI / 180.f)));
 
 	const int count = 8;
-	const float spread = 40.f; // 각 탄 사이의 각도 간격(조정 가능)
-	// 중심 각을 m_fAngle으로 사용(원하면 매 호출마다 증가시켜 회전 효과)
+	const float spread = 40.f; 
 
 	for (int i = 0; i < count; ++i)
 	{
-		float angle = m_fAngle + (i - count / 2) * spread; // 중앙을 향한 팬
+		float angle = m_fAngle + (i - count / 2) * spread; 
 		float rad = angle * (PI / 180.f);
 
 		// 총알 생성 위치 (보스에서 약간 떨어진 지점)

@@ -6,7 +6,7 @@
 class CBoss : public CObj
 {
 public:
-  enum STATE { IDLE, ATTACK, DEAD, ST_END };
+  enum STATE { IDLE, MOVE ,ATTACK,PATTERN1 ,PATTERN2 ,DEAD, ST_END };
 
 public:
   CBoss();
@@ -20,10 +20,12 @@ public:
   void Release() override;
   void Motion_Change();
 public:
+  void Pattern1_Bullet_Rain();
   void Boss_Frame();
   void Sector_Pattern();
 
 private:
   STATE				m_ePreState;
   STATE				m_eCurState;
+  POINT       m_BossLocation;
 };

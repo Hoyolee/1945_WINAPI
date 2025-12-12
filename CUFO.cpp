@@ -21,7 +21,7 @@ void CUFO::Initialize()
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Monster/enemyUFO.bmp", L"UFO");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Monster/deathExplosions.bmp", L"boom");
 
-	m_iHp = 30;
+	m_iHp = 15;
 	// 플레이어 크기 및 위치지정
 	m_tInfo.fCX = 53.f;
 	m_tInfo.fCY = 32.f;

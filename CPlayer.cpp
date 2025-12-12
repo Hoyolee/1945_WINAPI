@@ -29,9 +29,10 @@ CPlayer::~CPlayer()
 void CPlayer::Initialize()
 {
 	m_iHp = 1;
-	// 플레이어 크기 및 위치지정
 	m_tInfo.fCX = 217.f / 7.0f;
 	m_tInfo.fCY = 40.f;
+
+	m_iCounting = 0;
 
 	m_fSpeed = 4.f;
 	m_bIsLifeUI = false;
@@ -365,11 +366,23 @@ bool CPlayer::Anim_Dead()
 }
 bool CPlayer::isOnCollision()
 {
+	if (m_eCurState == IDLE)
+	{
+		m_iCounting++;
+		if (m_iCounting > 1)
+		{
+			return false;
+		}
+	}
+
 	if (m_eCurState == RESPAWN)
 		return false;
 
 	if (m_eCurState == DEAD)
 		return false;
+
+	if(m_eCurState == INVINCIBLE)
+    return false;
 
 	return true;
 }

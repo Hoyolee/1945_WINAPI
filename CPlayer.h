@@ -4,7 +4,7 @@
 class CPlayer : public CObj
 {
 public:
-	enum STATE { IDLE, RESPAWN, LEFT_MOVE, RIGHT_MOVE, ATTACK, DEAD, DEADANMAITON,GAMEOVER, ST_END };
+	enum STATE { IDLE, RESPAWN, LEFT_MOVE, RIGHT_MOVE, ATTACK, DEAD, INVINCIBLE,GAMEOVER, ST_END };
 
 public:
 	CPlayer();
@@ -47,6 +47,8 @@ private:
 	int					m_iBombCount;
 	int					m_iLifeCount;
 	int         m_iCount;
+	int					m_iCounting;
+
 	bool				m_bIsLifeUI ;
 
 	float				m_fTime;

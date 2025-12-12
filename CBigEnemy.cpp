@@ -21,7 +21,7 @@ void CBigEnemy::Initialize()
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Monster/Big_Enemy_Explosion.bmp", L"EnemyExplode");
 
 	m_iScore = 500;
-	m_iHp = 10;
+	m_iHp = 25;
 	// 플레이어 크기 및 위치지정
 	m_tInfo.fCX = 153.f;
 	m_tInfo.fCY = 134.f;

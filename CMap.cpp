@@ -106,7 +106,7 @@ int CMap::Update()
   {
     CSoundMgr::Get_Instance()->StopAll();
     CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CBoss>::Create(300.f, 0.f));
-    CSoundMgr::Get_Instance()->PlayBGM(L"Boss_BGM.mp3", 0.25);
+    CSoundMgr::Get_Instance()->PlayBGM(L"Boss_BGM.mp3", 0.35);
     ++iEnemyWave;
   }
 
