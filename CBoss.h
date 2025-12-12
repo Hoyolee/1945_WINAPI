@@ -19,13 +19,30 @@ public:
   void Render(HDC hDC) override;
   void Release() override;
   void Motion_Change();
+
+  void OnCollision(CObj* pOther);
+  bool Anim_Dead();
+
 public:
-  void Pattern1_Bullet_Rain();
+  void Bullet_Rain();
   void Boss_Frame();
   void Sector_Pattern();
+  void Move_State_Boss();
+  void Down_State_Boss();
+  void Pattern_Sector();
 
 private:
+
+  float       m_fBulletTime;
+  float       m_fPatternTime;
+
+  bool        m_bIsTarget;
+  bool        m_bisShot;
+  bool        m_biSDead;
+
   STATE				m_ePreState;
   STATE				m_eCurState;
   POINT       m_BossLocation;
+
+  std::vector<int>  m_vPattern;
 };

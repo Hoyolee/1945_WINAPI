@@ -49,7 +49,7 @@ int CMap::Update()
     isSpawned = true;
     ++iEnemyWave;
   }
-
+  
   if (m_fTime + 1750 == m_fSpawnTime && iEnemyWave == 1)
   {
     CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CEnemy>::Create(460.0f, -70.f));
@@ -57,7 +57,7 @@ int CMap::Update()
     CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CEnemy>::Create(510.0f, 0.f));
     ++iEnemyWave;
   }
-
+  
   if (m_fTime + 2750 == m_fSpawnTime && iEnemyWave == 2)
   {
     CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CEnemy>::Create(290.0f, -70.f ));
@@ -65,7 +65,7 @@ int CMap::Update()
     CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CEnemy>::Create(340.0f,  0.f  ));
     ++iEnemyWave;
   }
-
+  
   if (m_fTime + 8000 == m_fSpawnTime && iEnemyWave == 3)
   {
     CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CUFO>::Create(450.f, 0.f));
@@ -80,39 +80,39 @@ int CMap::Update()
     CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CEnemy>::Create(510.0f, 0.f));
     ++iEnemyWave;
   }
-
-  if (m_fTime + 18000 == m_fSpawnTime && iEnemyWave == 4)
+  
+  if (m_fTime + 22000 == m_fSpawnTime && iEnemyWave == 4)
   {
     CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CBigEnemy>::Create(300.f, 0.f));
    
     CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CEnemy>::Create(460.0f, -70.f));
     CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CEnemy>::Create(410.0f, 0.f));
     CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CEnemy>::Create(510.0f, 0.f));
-
+  
     CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CEnemy>::Create(120.0f, -70.f));
     CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CEnemy>::Create(70.0f, 0.f));
     CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CEnemy>::Create(170.0f, 0.f));
-
+  
     CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CHeli>::Create(300.f, 0.f));
     ++iEnemyWave;
   }
-
+  
   if(m_fTime + 20000 == m_fSpawnTime && iEnemyWave == 5)
   {
     CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CBigEnemy>::Create(150.f, 0.f));
     CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CBigEnemy>::Create(450.f, 0.f));
-
+  
     CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CHeli>::Create());
     ++iEnemyWave;
   }
 
-  if(m_fTime + 25000 == m_fSpawnTime)
-  {
-    CSoundMgr::Get_Instance()->StopAll();
-    CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CBoss>::Create(300.f, 0.f));
-    CSoundMgr::Get_Instance()->PlayBGM(L"Boss_BGM.mp3", 0.35);
-    ++iEnemyWave;
-  }
+  //if(m_fTime + 1500 == m_fSpawnTime&&iEnemyWave == 0)
+  //{
+  //  CSoundMgr::Get_Instance()->StopAll();
+  //  CObjMgr::Get_Instance()->AddObject(OBJ_BOSS, CAbstractFactory<CBoss>::Create(300.f, 0.f));
+  //  CSoundMgr::Get_Instance()->PlayBGM(L"Boss_BGM.mp3", 0.35);
+  //  ++iEnemyWave;
+  //}
 
   return OBJ_NOEVENT;
 }

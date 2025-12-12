@@ -107,11 +107,3 @@ void CStealthEnemy::Release()
 {
 }
 
-void CStealthEnemy::Create_Bullet()
-{
-}
-
-void RangedRandDemo(int range_min, int range_max, int n)
-{
-	
-}

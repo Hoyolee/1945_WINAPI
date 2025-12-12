@@ -6,6 +6,7 @@
 #include "CEnemyBullet.h"
 #include "CBigBullet.h"
 #include "CSoundMgr.h"
+#include "CEffect.h"
 
 CBigEnemy::CBigEnemy()
 {
@@ -13,6 +14,7 @@ CBigEnemy::CBigEnemy()
 
 CBigEnemy::~CBigEnemy()
 {
+	Release();
 }
 
 void CBigEnemy::Initialize()
@@ -88,9 +90,9 @@ int CBigEnemy::Update()
 
 void CBigEnemy::Late_Update()
 {
-#ifdef _DEBUG
-	cout << m_tInfo.fX << "\t" << m_tInfo.fY << "\t "<< m_iHp << endl;
-#endif // _DEBUG
+//#ifdef _DEBUG
+//	cout << m_tInfo.fX << "\t" << m_tInfo.fY << "\t "<< m_iHp << endl;
+//#endif // _DEBUG
 
 }
 
@@ -133,6 +135,7 @@ void CBigEnemy::Render(HDC hDC)
 
 void CBigEnemy::Release()
 {
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_EFFECT);
 }
 
 bool CBigEnemy::Anim_Dead()
@@ -153,6 +156,8 @@ bool CBigEnemy::Anim_Dead()
 
 void CBigEnemy::OnCollision(CObj* pOther)
 {
+	CObjMgr::Get_Instance()->AddObject(OBJ_EFFECT, CAbstractFactory<CEffect>::Create(m_tInfo.fX, m_tInfo.fY-50));
+
 	m_iHp--;
 	if (m_eCurState == DEAD)
 		return;

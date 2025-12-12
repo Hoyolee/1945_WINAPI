@@ -37,4 +37,14 @@ public:
 		return pObj;
 	}
 
+	static CObj* Create(float fX, float fY, float fAngle, bool isRain)
+	{
+		CObj* pObj = new T;
+		pObj->Initialize();
+		pObj->Set_Pos(fX, fY);
+		pObj->Set_Angle(fAngle);
+
+		return pObj;
+	}
+
 };

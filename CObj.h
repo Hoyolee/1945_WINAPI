@@ -38,6 +38,7 @@ public:
 
   void		Add_Score(int Score) { m_iScore += Score; }
 
+
 public:
 	virtual void	Initialize()		PURE;
 	virtual int		Update()				PURE;
@@ -60,6 +61,8 @@ protected:
 	float		m_fAngle;
 	float		m_fDistance;
 	float		m_fTime;
+
+	bool		m_isRain;
 	bool		m_bDead;
 	bool		m_bDameged;
 

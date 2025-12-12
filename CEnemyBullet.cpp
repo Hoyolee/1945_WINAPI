@@ -38,17 +38,19 @@ int CEnemyBullet::Update()
   __super::Update_Rect();
 
   Move_Frame();
-
-  m_tInfo.fX += cosf(m_fAngle) * m_fSpeed;
-  m_tInfo.fY += sinf(m_fAngle) * m_fSpeed;
-
+  
+    m_tInfo.fY += m_fSpeed;
+  
+  //m_tInfo.fX += cosf(m_fAngle) * m_fSpeed;
+  //m_tInfo.fY += sinf(m_fAngle) * m_fSpeed;
+  
     return OBJ_NOEVENT;
 }
 
 void CEnemyBullet::Late_Update()
 {
   const int Margin = 100;
-  if (m_tInfo.fY > WINCY + Margin || m_tInfo.fX > WINCX + Margin || m_tInfo.fX+Margin < 0)
+  if (m_tInfo.fY > WINCY || m_tInfo.fX > WINCX + Margin || m_tInfo.fX+Margin < 0)
     m_bDead = true;
 }
 

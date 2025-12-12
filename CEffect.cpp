@@ -13,6 +13,8 @@ CEffect::~CEffect()
 
 void CEffect::Initialize()
 {
+	m_bDead = false;
+
 	m_tInfo.fCX = 92;
 	m_tInfo.fCY = 94;
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Monster/Damaged.bmp", L"Damaged");
@@ -32,6 +34,9 @@ void CEffect::Initialize()
 
 int CEffect::Update()
 {
+	if (m_bDead)
+		return OBJ_DEAD;
+
   __super::Update_Rect();
 
 	Move_Frame();

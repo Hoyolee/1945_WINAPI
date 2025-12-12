@@ -113,9 +113,9 @@ int CPlayer::Update()
 
 void CPlayer::Late_Update()
 {
-#ifdef _DEBUG
-	cout << m_eCurState << "\t " << m_iHp << "\t" << m_iLifeCount << endl;
-#endif // _DEBUG
+//#ifdef _DEBUG
+//	cout << m_eCurState << "\t " << m_iHp << "\t" << m_iLifeCount << endl;
+//#endif // _DEBUG
 }
 
 void CPlayer::Render(HDC hDC)

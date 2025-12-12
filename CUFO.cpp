@@ -6,6 +6,7 @@
 #include "CEnemyBullet.h"
 #include "CBigBullet.h"
 #include "CSoundMgr.h"
+#include "CEffect.h"
 
 CUFO::CUFO():m_eCurState(IDLE)
 {
@@ -13,6 +14,7 @@ CUFO::CUFO():m_eCurState(IDLE)
 
 CUFO::~CUFO()
 {
+	Release();
 }
 // TODO: m_eCurState에 따른 애니메이션 변화 삽입 및 관련 함수 삽입
 // CEnemy 참고
@@ -192,6 +194,7 @@ void CUFO::Render(HDC hDC)
 
 void CUFO::Release()
 {
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_EFFECT);
 }
 
 void CUFO::UFO_Move_Frame()
@@ -223,6 +226,8 @@ bool CUFO::Anim_Dead()
 
 void CUFO::OnCollision(CObj* pOther)
 {
+	CObjMgr::Get_Instance()->AddObject(OBJ_EFFECT, CAbstractFactory<CEffect>::Create(m_tInfo.fX, m_tInfo.fY - 25));
+
 	m_iHp--;
 
 	if (m_eCurState == DEAD)

@@ -67,9 +67,6 @@ int CHeli::Update()
 			}
 		}
 	}
-
-
-
 	if (m_fTime + 500 < GetTickCount())
 	{
 		float fWidth(0.f), fHeight(0.f);
@@ -139,11 +136,10 @@ void CHeli::OnCollision(CObj* pOther)
 			m_tFrame.iMotion = 0;
 			m_tFrame.dwSpeed = 50;
 			m_tFrame.dwTime = GetTickCount();
-		
-	}
-
+		}
 }
 
 void CHeli::Release()
 {
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_EFFECT);
 }

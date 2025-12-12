@@ -91,6 +91,7 @@ void CStage::Late_Update()
 		CObjMgr::Get_Instance()->Get_Object(OBJ_BULLET)
 	);
 
+
 	CObjMgr::Get_Instance()->Late_Update();
 
 	CScrollMgr::Get_Instance()->Scroll_Lock();

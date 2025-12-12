@@ -16,6 +16,7 @@ CEnemy::CEnemy():m_eCurState(IDLE)
 
 CEnemy::~CEnemy()
 {
+	Release();
 }
 
 void CEnemy::Initialize()
@@ -114,6 +115,7 @@ void CEnemy::Render(HDC hDC)
 
 void CEnemy::Release()
 {
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_EFFECT);
 }
 void CEnemy::Enemy_Move_Frame()
 {
@@ -143,7 +145,8 @@ bool CEnemy::Anim_Dead()
 }
 void CEnemy::OnCollision(CObj* pOther)
 {
-	CObjMgr::Get_Instance()->AddObject(OBJ_EFFECT, CAbstractFactory<CEffect>::Create(m_tInfo.fX, m_tInfo.fY));
+	CObjMgr::Get_Instance()->AddObject(OBJ_EFFECT, 
+		CAbstractFactory<CEffect>::Create(m_tInfo.fX, m_tInfo.fY-25));
 
   CSoundMgr::Get_Instance()->PlaySound(L"Hit.mp3", SOUND_EFFECT, 0.75f);
 	--m_iHp;
