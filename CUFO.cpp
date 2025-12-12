@@ -201,7 +201,6 @@ void CUFO::UFO_Move_Frame()
 		++m_tFrame.iStart;
 		m_tFrame.dwTime = GetTickCount();
 
-
 		if (m_tFrame.iStart > m_tFrame.iEnd)
 			m_tFrame.iStart = 0;
 	}
@@ -236,7 +235,6 @@ void CUFO::OnCollision(CObj* pOther)
 		m_eCurState = DEAD;
 		m_bDead = true;
 
-		// 데드 스프라이트로 전환, 프레임 초기화
 		CSoundMgr::Get_Instance()->PlaySound(L"Object_Dead.mp3", SOUND_EFFECT, 0.25f);
 
 		m_pFrameKey = L"boom";

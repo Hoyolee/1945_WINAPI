@@ -9,6 +9,7 @@
 #include "CAbstractFactory.h"
 #include "CPlayer.h"
 #include "CSoundMgr.h"
+#include "CEffect.h"
 CEnemy::CEnemy():m_eCurState(IDLE)
 {
 }
@@ -142,7 +143,9 @@ bool CEnemy::Anim_Dead()
 }
 void CEnemy::OnCollision(CObj* pOther)
 {
-  CSoundMgr::Get_Instance()->PlaySound(L"Hit.mp3", SOUND_EFFECT, 0.25f);
+	CObjMgr::Get_Instance()->AddObject(OBJ_EFFECT, CAbstractFactory<CEffect>::Create(m_tInfo.fX, m_tInfo.fY));
+
+  CSoundMgr::Get_Instance()->PlaySound(L"Hit.mp3", SOUND_EFFECT, 0.75f);
 	--m_iHp;
 	
 	if (m_eCurState == DEAD)

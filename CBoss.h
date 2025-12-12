@@ -6,7 +6,7 @@
 class CBoss : public CObj
 {
 public:
-  enum STATE { IDLE, MOVE ,ATTACK,PATTERN1 ,PATTERN2 ,DEAD, ST_END };
+  enum STATE { DOWN, MOVE ,PATTERN1 ,PATTERN2 ,PATTERN3 , DEAD, ST_END };
 
 public:
   CBoss();

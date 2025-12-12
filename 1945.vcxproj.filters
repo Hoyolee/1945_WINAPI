@@ -127,6 +127,9 @@
     <Filter Include="소스 파일\Mgr\SoundMgr">
       <UniqueIdentifier>{518894f0-d626-44a1-9ab9-79470ce7e252}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Game_Object\CEffect">
+      <UniqueIdentifier>{0aa90409-9522-4a0c-90c7-abda6bef3fc1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -270,6 +273,9 @@
     <ClInclude Include="fmod_output.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="CEffect.h">
+      <Filter>소스 파일\Game_Object\CEffect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="1945.cpp">
@@ -373,6 +379,9 @@
     </ClCompile>
     <ClCompile Include="CSoundMgr.cpp">
       <Filter>소스 파일\Mgr\SoundMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="CEffect.cpp">
+      <Filter>소스 파일\Game_Object\CEffect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

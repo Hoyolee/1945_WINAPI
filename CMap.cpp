@@ -13,8 +13,6 @@
 #include "CSoundMgr.h"
 #include "CBoss.h"
 
-float Volumne = 0.3f;
-
 CMap::CMap():iEnemyWave(0)
 {
 }
@@ -30,7 +28,7 @@ void CMap::Initialize()
   m_tInfo = { 300, 1300, (float)WINCX, 4288.f };
   isSpawned = false;
   CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/backGround.bmp", L"Ground");
-  CSoundMgr::Get_Instance()->PlaySound(L"gameStart.mp3", SOUND_BGM, Volumne);
+  CSoundMgr::Get_Instance()->PlaySound(L"gameStart.mp3", SOUND_BGM, 0.35f);
   // 캐릭터 생성
   CObjMgr::Get_Instance()->AddObject(OBJ_PLAYER, CAbstractFactory<CPlayer>::Create(300, 600));
 }
@@ -68,7 +66,7 @@ int CMap::Update()
     ++iEnemyWave;
   }
 
-  if (m_fTime + 6000 == m_fSpawnTime && iEnemyWave == 3)
+  if (m_fTime + 8000 == m_fSpawnTime && iEnemyWave == 3)
   {
     CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CUFO>::Create(450.f, 0.f));
     CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CUFO>::Create(150.f, 0.f));
@@ -76,10 +74,14 @@ int CMap::Update()
     CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CEnemy>::Create(120.0f, -70.f)); 
     CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CEnemy>::Create(70.0f, 0.f));
     CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CEnemy>::Create(170.0f, 0.f));
+    
+    CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CEnemy>::Create(460.0f, -70.f));
+    CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CEnemy>::Create(410.0f, 0.f));
+    CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CEnemy>::Create(510.0f, 0.f));
     ++iEnemyWave;
   }
 
-  if (m_fTime + 15000 == m_fSpawnTime && iEnemyWave == 4)
+  if (m_fTime + 18000 == m_fSpawnTime && iEnemyWave == 4)
   {
     CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CBigEnemy>::Create(300.f, 0.f));
    
@@ -91,7 +93,7 @@ int CMap::Update()
     CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CEnemy>::Create(70.0f, 0.f));
     CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CEnemy>::Create(170.0f, 0.f));
 
-    //CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CHeli>::Create(300.f, 0.f));
+    CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CHeli>::Create(300.f, 0.f));
     ++iEnemyWave;
   }
 
@@ -99,6 +101,8 @@ int CMap::Update()
   {
     CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CBigEnemy>::Create(150.f, 0.f));
     CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CBigEnemy>::Create(450.f, 0.f));
+
+    CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CHeli>::Create());
     ++iEnemyWave;
   }
 

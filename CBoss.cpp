@@ -32,6 +32,8 @@ void CBoss::Initialize()
 	m_iHp = 50.f;
 
 	m_fDistance = 100.f;
+	
+	m_fTime = GetTickCount();
 
 	m_tFrame.iStart = 0;
 	m_tFrame.iEnd = 19;
@@ -46,7 +48,7 @@ int CBoss::Update()
 {
 	if (m_bDead)
 		return OBJ_DEAD;
-
+	
 	__super::Update_Rect();
 
 	Boss_Frame();
@@ -97,7 +99,6 @@ void CBoss::Render(HDC hDC)
 	}
 }
 
-
 void CBoss::Release()
 {
 }
@@ -144,6 +145,13 @@ void CBoss::Motion_Change()
 			m_tFrame.dwTime = GetTickCount();
 			break;
 
+		case MOVE:
+			m_tFrame.iStart = 0;
+			m_tFrame.iEnd = 19;
+			m_tFrame.iMotion = 0;
+			m_tFrame.dwSpeed = 200;
+			m_tFrame.dwTime = GetTickCount();
+
 		case DEAD:
 			m_tFrame.iStart = 0;
 			m_tFrame.iEnd = 19;
@@ -179,5 +187,4 @@ void CBoss::Sector_Pattern()
 
 		CObjMgr::Get_Instance()->AddObject(OBJ_MON_BULLET, pBullet);
 	}
-
 }
