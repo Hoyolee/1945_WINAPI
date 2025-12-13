@@ -32,13 +32,16 @@ public:
   void Pattern_Sector();
 
 private:
-
+  
+  int         m_iPatternCount;
+  
   float       m_fBulletTime;
   float       m_fPatternTime;
 
-  bool        m_bIsTarget;
+  bool        m_bisTarget;
   bool        m_bisShot;
   bool        m_biSDead;
+  bool        m_bisArrive;
 
   STATE				m_ePreState;
   STATE				m_eCurState;

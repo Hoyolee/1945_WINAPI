@@ -39,10 +39,8 @@ int CEnemyBullet::Update()
 
   Move_Frame();
   
-    m_tInfo.fY += m_fSpeed;
-  
-  //m_tInfo.fX += cosf(m_fAngle) * m_fSpeed;
-  //m_tInfo.fY += sinf(m_fAngle) * m_fSpeed;
+  m_tInfo.fX += cosf(m_fAngle) * m_fSpeed;
+  m_tInfo.fY += sinf(m_fAngle) * m_fSpeed;
   
     return OBJ_NOEVENT;
 }

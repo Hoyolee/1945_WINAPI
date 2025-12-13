@@ -26,14 +26,20 @@ void CBoss::Initialize()
 	m_tInfo.fCX = 188.f;
 	m_tInfo.fCY = 186.f;
 
+	m_fPatternTime = GetTickCount();
+
 	m_biSDead = false;
 
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Boss/enemyBoss.bmp", L"Boss");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Boss/bossExplosion.bmp", L"BossDead");
 
-	m_fAngle = 90.f;
+  m_fAngle = 0.f;
 	
 	m_iHp = 90.f;
+
+	m_iScore = 1000;
+	m_iPatternCount = 0;
+
 
 	m_fDistance = 100.f;
 	m_fSpeed = 5.f;
@@ -49,7 +55,7 @@ void CBoss::Initialize()
 	m_tFrame.dwTime = GetTickCount();
 
 	m_bDead = false;
-	m_bIsTarget = false;
+	m_bisTarget = false;
 	m_bisShot = false;
 }
 
@@ -63,7 +69,7 @@ int CBoss::Update()
 	if (m_eCurState == MOVE)
 	{
 		Move_State_Boss();
-		if (m_fTime + 1000 < GetTickCount())
+		if (m_fTime + 5500 < GetTickCount())
 		{
 			m_eCurState = PATTERN1;
 			m_fTime = GetTickCount();
@@ -71,9 +77,7 @@ int CBoss::Update()
 	}
 
 	if (m_eCurState == PATTERN1)
-	{
 		Bullet_Rain();
-	}
 
 	Boss_Frame();	
 
@@ -89,6 +93,9 @@ void CBoss::Render(HDC hDC)
 	if (m_eCurState == DOWN || m_eCurState == MOVE || m_eCurState == PATTERN1 ||
 			m_eCurState == PATTERN2 || m_eCurState == PATTERN3)
 	{
+		MoveToEx(hDC, (int)m_tInfo.fX, (int)m_tInfo.fY, nullptr);
+		LineTo(hDC, m_tPosin.x, m_tPosin.y);
+
 		HDC		hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"Boss");
 
 		GdiTransparentBlt(hDC,								// 복사 받을 DC
@@ -129,26 +136,58 @@ void CBoss::Bullet_Rain()
 {
 	const float Speed = fabsf(m_fSpeed);
 	float TargetX = 600.f;
+	float SecTargetX = 25.f;
+
+	const float spawnX = m_tInfo.fX;
+	const float spawnY = m_tInfo.fY + (m_tInfo.fCY * 0.5f) + 5.f;
+
+	const float downAngle = PI / 2.f;
 	
-	if(!m_bIsTarget)
+	if(m_iPatternCount < 4)
 	{
-		if (m_tInfo.fX <= TargetX)
-			m_tInfo.fX += Speed;
-		else
-		{ 
-			TargetX = 100.f;
-			m_bIsTarget = true;
+		if (!m_bisTarget)
+		{
+			if (m_tInfo.fX < TargetX)
+			{
+				m_tInfo.fX += m_fSpeed;
+				if (m_fBulletTime + 150 <= GetTickCount())
+				{
+					CObjMgr::Get_Instance()->AddObject(OBJ_MON_BULLET,
+						CAbstractFactory<CBigBullet>::Create(spawnX, spawnY, downAngle, 7.0f));
+					m_fBulletTime = GetTickCount();
+				}
+				if (m_tInfo.fX >= TargetX)
+				{
+					m_bisTarget = true;
+					m_iPatternCount++;
+				}
+			}
+		}
+
+		if (m_bisTarget)
+		{
+			if (m_tInfo.fX >= SecTargetX)
+			{
+				m_tInfo.fX -= m_fSpeed;
+
+				if (m_fBulletTime + 150 <= GetTickCount())
+				{
+					CObjMgr::Get_Instance()->AddObject(OBJ_MON_BULLET,
+						CAbstractFactory<CBigBullet>::Create(spawnX, spawnY, downAngle, 7.0f));
+					m_fBulletTime = GetTickCount();
+				}
+			}
+			else
+			{
+				m_bisTarget = false;
+				m_iPatternCount++;
+			}
 		}
 	}
-
-	if (m_bIsTarget)
+	else
 	{
-		if(!m_bisShot)
-		{
-			CObjMgr::Get_Instance()->AddObject(OBJ_MON_BULLET,
-				CAbstractFactory<CEnemyBullet>::Create(m_tInfo.fX, m_tInfo.fY));
-			m_bisShot = true;
-		}
+		m_eCurState == MOVE;
+		return;
 	}
 }
 
@@ -209,12 +248,7 @@ void CBoss::Sector_Pattern()
 		m_fSpeed = fabsf(m_fSpeed);
 		m_tInfo.fX -= m_fSpeed;
 	}
-
-	m_tPosin.x = long(cosf(m_fAngle * (PI / 180.f)));
-	m_tPosin.y = long(sinf(m_fAngle * (PI / 180.f)));
-
-	m_fAngle = atan2f(m_tPosin.x,m_tPosin.y);
-
+	 	
 	CObjMgr::Get_Instance()->AddObject(OBJ_MON_BULLET, 
 		CAbstractFactory<CBigBullet>::Create(m_tInfo.fX, m_tInfo.fY, m_fAngle));
 }
@@ -244,15 +278,15 @@ void CBoss::Move_State_Boss()
 			}
 		}
 	}
-	if (m_fBulletTime + 250 < GetTickCount())
-	{
-		float fWidth(0.f), fHeight(0.f);
-		fWidth = CObjMgr::Get_Instance()->Get_Object(OBJ_PLAYER).front()->Get_Info()->fX - m_tInfo.fX;
-		fHeight = CObjMgr::Get_Instance()->Get_Object(OBJ_PLAYER).front()->Get_Info()->fY - m_tInfo.fY;
-		m_fAngle = atan2f(fHeight, fWidth);
-		CObjMgr::Get_Instance()->AddObject(OBJ_MON_BULLET, CAbstractFactory<CBigBullet>::Create(m_tInfo.fX, m_tInfo.fY, m_fAngle));
-		m_fBulletTime = GetTickCount();
-	}
+	//if (m_fBulletTime + 250 < GetTickCount())
+	//{
+	//	float fWidth(0.f), fHeight(0.f);
+	//	fWidth = CObjMgr::Get_Instance()->Get_Object(OBJ_PLAYER).front()->Get_Info()->fX - m_tInfo.fX;
+	//	fHeight = CObjMgr::Get_Instance()->Get_Object(OBJ_PLAYER).front()->Get_Info()->fY - m_tInfo.fY;
+	//	m_fAngle = atan2f(fHeight, fWidth);
+	//	CObjMgr::Get_Instance()->AddObject(OBJ_MON_BULLET, CAbstractFactory<CBigBullet>::Create(m_tInfo.fX, m_tInfo.fY, m_fAngle));
+	//	m_fBulletTime = GetTickCount();
+	//}
 }
 
 void CBoss::Down_State_Boss()
@@ -272,17 +306,18 @@ void CBoss::OnCollision(CObj* pOther)
 	CObjMgr::Get_Instance()->AddObject(OBJ_EFFECT, CAbstractFactory<CEffect>::Create(m_tInfo.fX, m_tInfo.fY - 25));
 
 	CSoundMgr::Get_Instance()->PlaySound(L"Hit.mp3", SOUND_EFFECT, 0.75f);
+	
 	--m_iHp;
 
 	if (m_eCurState == DEAD)
 		return;
 
-	CObjMgr::Get_Instance()->Get_Object(OBJ_STAGE_UI).back()->Add_Score(m_iScore);
-
 	if (m_iHp <= 0)
 	{
 		m_eCurState = DEAD;
 		m_biSDead = true;
+
+		CObjMgr::Get_Instance()->Get_Object(OBJ_STAGE_UI).back()->Add_Score(m_iScore);
 
 		CSoundMgr::Get_Instance()->PlaySound(L"Object_Dead.mp3", SOUND_EFFECT, 0.25f);
 

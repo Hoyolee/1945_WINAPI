@@ -23,6 +23,8 @@ void CBigBullet::Initialize()
   m_fSpeed = 5.0f;
   m_bDead = false;
 
+  m_fDistance = 50.f;
+  
   m_tFrame.iStart = 0;
   m_tFrame.iEnd = 8;
   m_tFrame.iMotion = 0;
@@ -35,13 +37,13 @@ int CBigBullet::Update()
 {
   if (m_bDead)
     return OBJ_DEAD;
-
+  
+  m_tInfo.fX += cosf(m_fAngle) * m_fSpeed;
+  m_tInfo.fY += sinf(m_fAngle) * m_fSpeed;
+ 
   __super::Update_Rect();
 
   Move_Frame();
-
-  m_tInfo.fX += cosf(m_fAngle) * m_fSpeed;
-  m_tInfo.fY += sinf(m_fAngle) * m_fSpeed;
 
   return OBJ_NOEVENT;
 }
@@ -75,7 +77,6 @@ void CBigBullet::Render(HDC hDC)
     (INT)m_tInfo.fCX,		// 복사할 이미지의 가로, 세로
     (INT)m_tInfo.fCY,
     RGB(255, 0, 255));	// 제거할 색상
-
 }
 
 void CBigBullet::Release()

@@ -55,7 +55,7 @@ protected:
 	INFO		m_tInfo;
 	RECT		m_tRect;
 	FRAME		m_tFrame;
-	POINT				m_tPosin;
+	POINT		m_tPosin;
 
 	float		m_fSpeed;
 	float		m_fAngle;
