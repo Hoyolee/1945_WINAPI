@@ -195,11 +195,10 @@ void CPlayer::Key_Input()
 	{
 		if (m_fBulletTime <= 0.f)
 		{
+			CSoundMgr::Get_Instance()->PlaySound(L"Laser.mp3", SOUND_FIRE,0.25f);
 			CObjMgr::Get_Instance()->AddObject(OBJ_BULLET, CAbstractFactory<CBullet>::Create(m_tInfo.fX,m_tInfo.fY));
 			m_fBulletTime = 0.5f;
 		}
-		if(m_fTime + 1000> GetTickCount())
-	   CSoundMgr::Get_Instance()->StopSound(SOUND_EFFECT);
 	} 
 	else
 		m_eCurState = IDLE;

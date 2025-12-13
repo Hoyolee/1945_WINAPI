@@ -47,8 +47,7 @@ int CEnemyBullet::Update()
 
 void CEnemyBullet::Late_Update()
 {
-  const int Margin = 100;
-  if (m_tInfo.fY > WINCY || m_tInfo.fX > WINCX + Margin || m_tInfo.fX+Margin < 0)
+  if (m_tInfo.fY > WINCY || m_tInfo.fX > WINCX || m_tInfo.fX < 0)
     m_bDead = true;
 }
 

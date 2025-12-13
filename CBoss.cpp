@@ -36,10 +36,8 @@ void CBoss::Initialize()
   m_fAngle = 0.f;
 	
 	m_iHp = 90.f;
-
 	m_iScore = 1000;
 	m_iPatternCount = 0;
-
 
 	m_fDistance = 100.f;
 	m_fSpeed = 5.f;
@@ -47,7 +45,8 @@ void CBoss::Initialize()
 	m_fTime = GetTickCount();
 	m_fBulletTime = GetTickCount();
 	m_fPatternTime = GetTickCount();
-
+	m_fWhipTime = GetTickCount();
+		
 	m_tFrame.iStart = 0;
 	m_tFrame.iEnd = 19;
 	m_tFrame.iMotion = 0;
@@ -69,15 +68,21 @@ int CBoss::Update()
 	if (m_eCurState == MOVE)
 	{
 		Move_State_Boss();
-		if (m_fTime + 5500 < GetTickCount())
+		if (m_fTime + 3500 < GetTickCount())
 		{
-			m_eCurState = PATTERN1;
+			m_eCurState = PATTERN2;
 			m_fTime = GetTickCount();
 		}
 	}
 
 	if (m_eCurState == PATTERN1)
 		Bullet_Rain();
+
+	if (m_eCurState == PATTERN2)
+		Sector_Pattern();
+
+	if (m_eCurState == PATTERN3)
+		Whip_Pattern();
 
 	Boss_Frame();	
 
@@ -87,7 +92,6 @@ int CBoss::Update()
 void CBoss::Late_Update()
 {
 }
-
 void CBoss::Render(HDC hDC)
 {
 	if (m_eCurState == DOWN || m_eCurState == MOVE || m_eCurState == PATTERN1 ||
@@ -127,70 +131,9 @@ void CBoss::Render(HDC hDC)
 				RGB(255, 0, 255));									// 제거할 색상
 	}
 }
-
 void CBoss::Release()
 {
 }
-
-void CBoss::Bullet_Rain()
-{
-	const float Speed = fabsf(m_fSpeed);
-	float TargetX = 600.f;
-	float SecTargetX = 25.f;
-
-	const float spawnX = m_tInfo.fX;
-	const float spawnY = m_tInfo.fY + (m_tInfo.fCY * 0.5f) + 5.f;
-
-	const float downAngle = PI / 2.f;
-	
-	if(m_iPatternCount < 4)
-	{
-		if (!m_bisTarget)
-		{
-			if (m_tInfo.fX < TargetX)
-			{
-				m_tInfo.fX += m_fSpeed;
-				if (m_fBulletTime + 150 <= GetTickCount())
-				{
-					CObjMgr::Get_Instance()->AddObject(OBJ_MON_BULLET,
-						CAbstractFactory<CBigBullet>::Create(spawnX, spawnY, downAngle, 7.0f));
-					m_fBulletTime = GetTickCount();
-				}
-				if (m_tInfo.fX >= TargetX)
-				{
-					m_bisTarget = true;
-					m_iPatternCount++;
-				}
-			}
-		}
-
-		if (m_bisTarget)
-		{
-			if (m_tInfo.fX >= SecTargetX)
-			{
-				m_tInfo.fX -= m_fSpeed;
-
-				if (m_fBulletTime + 150 <= GetTickCount())
-				{
-					CObjMgr::Get_Instance()->AddObject(OBJ_MON_BULLET,
-						CAbstractFactory<CBigBullet>::Create(spawnX, spawnY, downAngle, 7.0f));
-					m_fBulletTime = GetTickCount();
-				}
-			}
-			else
-			{
-				m_bisTarget = false;
-				m_iPatternCount++;
-			}
-		}
-	}
-	else
-	{
-		m_eCurState == MOVE;
-		return;
-	}
-}
-
 void CBoss::Boss_Frame()
 {
 	if (m_tFrame.dwSpeed + m_tFrame.dwTime < GetTickCount())
@@ -202,7 +145,6 @@ void CBoss::Boss_Frame()
 			m_tFrame.iStart = 0;
 	}
 }
-
 void CBoss::Motion_Change()
 {
 	if (m_ePreState != m_eCurState)
@@ -235,24 +177,6 @@ void CBoss::Motion_Change()
 		m_ePreState = m_eCurState;
 	}
 }
-
-void CBoss::Sector_Pattern()
-{
-	if (m_tInfo.fX < 300)
-	{
-		m_fSpeed = fabsf(m_fSpeed);
-		m_tInfo.fX += m_fSpeed;
-	}
-	 if (m_tInfo.fX > 300)
-	{
-		m_fSpeed = fabsf(m_fSpeed);
-		m_tInfo.fX -= m_fSpeed;
-	}
-	 	
-	CObjMgr::Get_Instance()->AddObject(OBJ_MON_BULLET, 
-		CAbstractFactory<CBigBullet>::Create(m_tInfo.fX, m_tInfo.fY, m_fAngle));
-}
-
 void CBoss::Move_State_Boss()
 {
 	if (m_tInfo.fY <= 230.f)
@@ -288,7 +212,6 @@ void CBoss::Move_State_Boss()
 	//	m_fBulletTime = GetTickCount();
 	//}
 }
-
 void CBoss::Down_State_Boss()
 {
 	if (m_tInfo.fY <= 230.f)
@@ -296,16 +219,126 @@ void CBoss::Down_State_Boss()
 	if (m_tInfo.fY >= 200.f)
 		m_eCurState = MOVE;
 }
-
-void CBoss::Pattern_Sector()
+void CBoss::Whip_Pattern()
 {
+	const float TargetX = 300.f;
+	float speed = fabsf(m_fSpeed);
+
+	const float spawnX = m_tInfo.fX;
+	const float spawnY = m_tInfo.fY + (m_tInfo.fCY * 0.5f);
+	if (m_iPatternCount < 5)
+	{
+		if (!m_bisTarget)
+		{
+			if (m_tInfo.fX < TargetX)
+				m_tInfo.fX += speed;
+			else if (m_tInfo.fX > TargetX)
+				m_tInfo.fX -= speed;
+			else
+				m_bisTarget = true;
+		}
+		if (m_bisTarget)
+		{
+			float fWidth(0.f), fHeight(0.f);
+			fWidth = CObjMgr::Get_Instance()->Get_Object(OBJ_PLAYER).front()->Get_Info()->fX - m_tInfo.fX;
+			fHeight = CObjMgr::Get_Instance()->Get_Object(OBJ_PLAYER).front()->Get_Info()->fY - m_tInfo.fY;
+			float playerAngle = atan2f(fHeight, fWidth);
+
+			if (m_fBulletTime + 50 < GetTickCount())
+			{
+				CObjMgr::Get_Instance()->AddObject(OBJ_MON_BULLET,
+					CAbstractFactory <CEnemyBullet>::Create(spawnX, spawnY, playerAngle, 4.0f));
+				m_fBulletTime = GetTickCount();
+			}
+			if(m_fWhipTime + 3000 < GetTickCount())
+			{
+				m_iPatternCount++;
+				m_fWhipTime = GetTickCount();
+			}
+		}
+	}
+	else
+	{
+		m_iPatternCount = 0;
+		return;
+	}
+
+}
+void CBoss::Bullet_Rain()
+{
+	const float Speed = fabsf(m_fSpeed);
+	float TargetX = 600.f;
+	float SecTargetX = 25.f;
+
+	const float spawnX = m_tInfo.fX;
+	const float spawnY = m_tInfo.fY + (m_tInfo.fCY * 0.5f) + 5.f;
+
+	const float downAngle = PI / 2.f;
+
+	if (m_iPatternCount < 4)
+	{
+		if (!m_bisTarget)
+		{
+			if (m_tInfo.fX < TargetX)
+			{
+				m_tInfo.fX += m_fSpeed;
+				if (m_fBulletTime + 150 <= GetTickCount())
+				{
+					CObjMgr::Get_Instance()->AddObject(OBJ_MON_BULLET,
+						CAbstractFactory<CBigBullet>::Create(spawnX, spawnY, downAngle, 7.0f));
+					m_fBulletTime = GetTickCount();
+				}
+				if (m_tInfo.fX >= TargetX)
+				{
+					m_bisTarget = true;
+					m_iPatternCount++;
+				}
+			}
+		}
+		if (m_bisTarget)
+		{
+			if (m_tInfo.fX >= SecTargetX)
+			{
+				m_tInfo.fX -= m_fSpeed;
+
+				if (m_fBulletTime + 150 <= GetTickCount())
+				{
+					CObjMgr::Get_Instance()->AddObject(OBJ_MON_BULLET,
+						CAbstractFactory<CBigBullet>::Create(spawnX, spawnY, downAngle, 7.0f));
+					m_fBulletTime = GetTickCount();
+				}
+			}
+			else
+			{
+				m_bisTarget = false;
+				m_iPatternCount++;
+			}
+		}
+	}
+	else
+	{
+		m_eCurState = MOVE;
+		m_iPatternCount = 0;
+		return;
+	}
 }
 
+void CBoss::Sector_Pattern()
+{
+	const float Speed = fabsf(m_fSpeed);
+	float TargetX = 600.f;
+	float SecTargetX = 25.f;
+
+	const float spawnX = m_tInfo.fX;
+	const float spawnY = m_tInfo.fY + (m_tInfo.fCY * 0.5f) + 5.f;
+
+
+}
 void CBoss::OnCollision(CObj* pOther)
 {
-	CObjMgr::Get_Instance()->AddObject(OBJ_EFFECT, CAbstractFactory<CEffect>::Create(m_tInfo.fX, m_tInfo.fY - 25));
+	CObjMgr::Get_Instance()->AddObject(OBJ_EFFECT, CAbstractFactory<CEffect>::Create(m_tInfo.fX, m_tInfo.fY - 75));
 
-	CSoundMgr::Get_Instance()->PlaySound(L"Hit.mp3", SOUND_EFFECT, 0.75f);
+	CSoundMgr::Get_Instance()->PlaySound(L"Hit.mp3", SOUND_EFFECT, 0.5f);
 	
 	--m_iHp;
 
@@ -319,7 +352,7 @@ void CBoss::OnCollision(CObj* pOther)
 
 		CObjMgr::Get_Instance()->Get_Object(OBJ_STAGE_UI).back()->Add_Score(m_iScore);
 
-		CSoundMgr::Get_Instance()->PlaySound(L"Object_Dead.mp3", SOUND_EFFECT, 0.25f);
+		CSoundMgr::Get_Instance()->PlaySound(L"Object_Dead.mp3", SOUND_EFFECT, 0.35f);
 
 		m_pFrameKey = L"EnemyDead";
 
@@ -330,7 +363,6 @@ void CBoss::OnCollision(CObj* pOther)
 		m_tFrame.dwTime = GetTickCount();
 	}
 }
-
 bool CBoss::Anim_Dead()
 {
 	if (!m_biSDead)

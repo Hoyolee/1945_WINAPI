@@ -19,7 +19,6 @@ void CBullet::Initialize()
 	m_tInfo.fCY = 53.f;
 	m_fSpeed = 10.f;
 	m_bDead = false;
-	CSoundMgr::Get_Instance()->PlaySound(L"asdds.mp3", SOUND_EFFECT, 0.5f);
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Bullet/Player/playerAttack.bmp", L"Bullet");
 
 	m_tFrame.iStart = 0;

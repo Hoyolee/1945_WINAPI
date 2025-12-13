@@ -29,14 +29,14 @@ public:
   void Sector_Pattern();
   void Move_State_Boss();
   void Down_State_Boss();
-  void Pattern_Sector();
-
+  void Whip_Pattern();
 private:
   
   int         m_iPatternCount;
   
   float       m_fBulletTime;
   float       m_fPatternTime;
+  float       m_fWhipTime;
 
   bool        m_bisTarget;
   bool        m_bisShot;
@@ -47,5 +47,5 @@ private:
   STATE				m_eCurState;
   POINT       m_BossLocation;
 
-  std::vector<int>  m_vPattern;
+  std::vector<STATE>  m_vPattern;
 };
