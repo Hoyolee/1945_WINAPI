@@ -33,11 +33,12 @@ void CBoss::Initialize()
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Boss/enemyBoss.bmp", L"Boss");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Boss/bossExplosion.bmp", L"BossDead");
 
-  m_fAngle = 0.f;
+  m_fAngle = 30.f;
 	
-	m_iHp = 90.f;
+	m_iHp = 50.f;
 	m_iScore = 1000;
 	m_iPatternCount = 0;
+	m_iPatternIndex = 0;
 
 	m_fDistance = 100.f;
 	m_fSpeed = 5.f;
@@ -70,7 +71,7 @@ int CBoss::Update()
 		Move_State_Boss();
 		if (m_fTime + 3500 < GetTickCount())
 		{
-			m_eCurState = PATTERN2;
+			m_eCurState = PATTERN1;
 			m_fTime = GetTickCount();
 		}
 	}
@@ -177,6 +178,22 @@ void CBoss::Motion_Change()
 		m_ePreState = m_eCurState;
 	}
 }
+bool CBoss::Anim_Dead()
+{
+	if (!m_biSDead)
+		return false;
+
+	if (m_tFrame.dwTime + m_tFrame.dwSpeed < GetTickCount())
+	{
+		++m_tFrame.iStart;
+		m_tFrame.dwTime = GetTickCount();
+
+		if (m_tFrame.iStart > m_tFrame.iEnd)
+			return true;
+	}
+	return false;
+}
+
 void CBoss::Move_State_Boss()
 {
 	if (m_tInfo.fY <= 230.f)
@@ -219,6 +236,7 @@ void CBoss::Down_State_Boss()
 	if (m_tInfo.fY >= 200.f)
 		m_eCurState = MOVE;
 }
+
 void CBoss::Whip_Pattern()
 {
 	const float TargetX = 300.f;
@@ -260,6 +278,8 @@ void CBoss::Whip_Pattern()
 	else
 	{
 		m_iPatternCount = 0;
+		m_bisTarget = false;
+		m_eCurState = MOVE;
 		return;
 	}
 
@@ -322,18 +342,75 @@ void CBoss::Bullet_Rain()
 		return;
 	}
 }
-
 void CBoss::Sector_Pattern()
 {
-	const float Speed = fabsf(m_fSpeed);
-	float TargetX = 600.f;
+	float TargetX = 300.f;
 	float SecTargetX = 25.f;
+
+	const float speed = fabsf(m_fSpeed);
 
 	const float spawnX = m_tInfo.fX;
 	const float spawnY = m_tInfo.fY + (m_tInfo.fCY * 0.5f) + 5.f;
+	
+	if (m_iPatternCount < 5)
+	{
+		if (!m_bisTarget)
+		{
+			if (m_tInfo.fX < TargetX)
+				m_tInfo.fX += speed;
+			else if (m_tInfo.fX > TargetX)
+				m_tInfo.fX -= speed;
+			else
+				m_bisTarget = true;
+		}
+		if (m_bisTarget)
+		{
+			if (m_fBulletTime + 1000 <= GetTickCount())
+			{
+				for (int i = 0; i < 33; i++)
+				{
+					CObjMgr::Get_Instance()->AddObject(OBJ_MON_BULLET,
+						CAbstractFactory<CBigBullet>::Create(spawnX, spawnY, m_fAngle));
+					m_fAngle += (i + 3);
+				}
+				m_fBulletTime = GetTickCount();
+			}
+		}
+	}
+	else
+	{
+		m_eCurState = MOVE;
+		m_iPatternCount = 0;
+		return;
+	}
+}
+void CBoss::Select_Pattern()
+{
+	m_vPattern.push_back(PATTERN1);
+	m_vPattern.push_back(PATTERN2);
+	m_vPattern.push_back(PATTERN3);
 
+	random_shuffle(m_vPattern.begin(), m_vPattern.end());
+
+	m_eCurPattern = m_vPattern[m_iPatternIndex];
+
+	switch (m_eCurPattern)
+	{
+	case PATTERN1:
+		m_eCurState = PATTERN1;
+		break;
+
+	case PATTERN2:
+		m_eCurState = PATTERN2;
+		break;
+
+	case PATTERN3:
+		m_eCurState = PATTERN3;
+		break;
+	}
 
 }
+
 void CBoss::OnCollision(CObj* pOther)
 {
 	CObjMgr::Get_Instance()->AddObject(OBJ_EFFECT, CAbstractFactory<CEffect>::Create(m_tInfo.fX, m_tInfo.fY - 75));
@@ -362,19 +439,4 @@ void CBoss::OnCollision(CObj* pOther)
 		m_tFrame.dwSpeed = 100;
 		m_tFrame.dwTime = GetTickCount();
 	}
-}
-bool CBoss::Anim_Dead()
-{
-	if (!m_biSDead)
-		return false;
-
-	if (m_tFrame.dwTime + m_tFrame.dwSpeed < GetTickCount())
-	{
-		++m_tFrame.iStart;
-		m_tFrame.dwTime = GetTickCount();
-
-		if (m_tFrame.iStart > m_tFrame.iEnd)
-			return true;
-	}
-	return false;
 }

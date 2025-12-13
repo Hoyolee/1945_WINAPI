@@ -18,18 +18,25 @@ public:
   void Late_Update() override;
   void Render(HDC hDC) override;
   void Release() override;
-  void Motion_Change();
 
+public:
+  // 애니메이션 관련 함수
+  void Motion_Change();
+  void Boss_Frame();
+  
+public:
+  // 충돌 관련 함수
   void OnCollision(CObj* pOther);
   bool Anim_Dead();
 
 public:
+  // 패턴 관련 함수
   void Bullet_Rain();
-  void Boss_Frame();
   void Sector_Pattern();
   void Move_State_Boss();
   void Down_State_Boss();
   void Whip_Pattern();
+  void Select_Pattern();
 private:
   
   int         m_iPatternCount;
@@ -45,7 +52,9 @@ private:
 
   STATE				m_ePreState;
   STATE				m_eCurState;
-  POINT       m_BossLocation;
+  STATE       m_eCurPattern;     
+
+  size_t      m_iPatternIndex;
 
   std::vector<STATE>  m_vPattern;
 };

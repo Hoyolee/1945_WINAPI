@@ -24,7 +24,7 @@ CMap::~CMap()
 void CMap::Initialize()
 { 
   m_fTime = GetTickCount();
-  m_fSpeed = 15.f;
+  m_fSpeed = 20.f;
   m_tInfo = { 300, 1300, (float)WINCX, 4288.f };
   isSpawned = false;
   CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/backGround.bmp", L"Ground");
