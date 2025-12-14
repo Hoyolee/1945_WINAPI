@@ -10,12 +10,12 @@
 #include "CBigBullet.h"
 #include "CEffect.h"
 #include "CSoundMgr.h"
+#include "CGameClear.h"
 
 CBoss::CBoss():m_eCurState(DOWN),m_ePreState(ST_END)
 {
 
 }
-
 CBoss::~CBoss()
 {
 	Release();
@@ -35,7 +35,7 @@ void CBoss::Initialize()
 
   m_fAngle = 30.f;
 	
-	m_iHp = 50.f;
+	m_iHp = 5.f;
 	m_iScore = 1000;
 	m_iPatternCount = 0;
 	m_iPatternIndex = 0;
@@ -84,6 +84,17 @@ int CBoss::Update()
 
 	if (m_eCurState == PATTERN3)
 		Whip_Pattern();
+
+	if (m_eCurState == DEAD)
+	{
+		if (Anim_Dead())
+		{
+			CObjMgr::Get_Instance()->AddObject(OBJ_GAMEOVER_UI,
+				CAbstractFactory<CGameClear>::Create(300.f,400.f));
+			return OBJ_DEAD;
+		}
+		return OBJ_NOEVENT;
+	}
 
 	Boss_Frame();	
 
@@ -236,7 +247,6 @@ void CBoss::Down_State_Boss()
 	if (m_tInfo.fY >= 200.f)
 		m_eCurState = MOVE;
 }
-
 void CBoss::Whip_Pattern()
 {
 	const float TargetX = 300.f;
@@ -410,7 +420,6 @@ void CBoss::Select_Pattern()
 	}
 
 }
-
 void CBoss::OnCollision(CObj* pOther)
 {
 	CObjMgr::Get_Instance()->AddObject(OBJ_EFFECT, CAbstractFactory<CEffect>::Create(m_tInfo.fX, m_tInfo.fY - 75));
@@ -436,7 +445,7 @@ void CBoss::OnCollision(CObj* pOther)
 		m_tFrame.iStart = 0;
 		m_tFrame.iEnd = 11;
 		m_tFrame.iMotion = 0;
-		m_tFrame.dwSpeed = 100;
+		m_tFrame.dwSpeed = 250;
 		m_tFrame.dwTime = GetTickCount();
 	}
 }

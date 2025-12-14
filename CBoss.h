@@ -37,6 +37,9 @@ public:
   void Down_State_Boss();
   void Whip_Pattern();
   void Select_Pattern();
+
+public:
+  STATE Get_State() { return m_eCurState; }
 private:
   
   int         m_iPatternCount;

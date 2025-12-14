@@ -35,11 +35,15 @@ public:
 public:
 	void Offset();
 	bool Anim_Dead();
-private:
-	void	Key_Input();
 	void	Motion_Change();
 	void	Player_Move_Frame();
 	void  Insert_Player_Animation();
+
+private:
+	void	Key_Input();
+
+public:
+	void End_Game();
 
 private:
 	int					m_iScore;

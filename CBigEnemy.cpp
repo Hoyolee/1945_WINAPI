@@ -44,14 +44,14 @@ int CBigEnemy::Update()
 	{
 		if (Anim_Dead())
 		{
-			CSoundMgr::Get_Instance()->PlaySound(L"Object_Dead.mp3", SOUND_EFFECT, 0.25f);
+			CSoundMgr::Get_Instance()->PlaySound(L"Object_Dead.mp3", SOUND_DEAD, 0.5f);
 			return OBJ_DEAD;
 		}
 		return OBJ_NOEVENT;
 	}
 
 	if(m_eCurState == IDLE)
-		{
+	{
 		if (m_tInfo.fY <= 200.f)
 			m_tInfo.fY += m_fSpeed;
 		else
@@ -75,7 +75,7 @@ int CBigEnemy::Update()
 				}
 			}
 		}
-		if (m_fTime + 1000 < GetTickCount())
+		if (m_fTime + 1000 < GetTickCount()&& m_eCurState == IDLE)
 		{
 			float fWidth(0.f), fHeight(0.f);
 			fWidth = CObjMgr::Get_Instance()->Get_Object(OBJ_PLAYER).front()->Get_Info()->fX - m_tInfo.fX;
@@ -90,9 +90,6 @@ int CBigEnemy::Update()
 
 void CBigEnemy::Late_Update()
 {
-//#ifdef _DEBUG
-//	cout << m_tInfo.fX << "\t" << m_tInfo.fY << "\t "<< m_iHp << endl;
-//#endif // _DEBUG
 
 }
 
@@ -157,8 +154,9 @@ bool CBigEnemy::Anim_Dead()
 void CBigEnemy::OnCollision(CObj* pOther)
 {
 	CObjMgr::Get_Instance()->AddObject(OBJ_EFFECT, CAbstractFactory<CEffect>::Create(m_tInfo.fX, m_tInfo.fY-50));
-
+	CSoundMgr::Get_Instance()->PlaySound(L"Hit.mp3", SOUND_HIT, 0.5f);
 	m_iHp--;
+
 	if (m_eCurState == DEAD)
 		return;
 

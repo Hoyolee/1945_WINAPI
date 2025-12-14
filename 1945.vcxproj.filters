@@ -49,9 +49,6 @@
     <Filter Include="소스 파일\Mgr\TileMgr">
       <UniqueIdentifier>{6bb61431-46d0-4603-8bf5-bd62fe2c3c71}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Mgr\ObjMgr">
-      <UniqueIdentifier>{2d534861-e386-4352-9791-f9e9690e966d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Game_Object\Bullet">
       <UniqueIdentifier>{169245f9-2ff1-4f9d-ba25-b1e6c7015a54}</UniqueIdentifier>
     </Filter>
@@ -121,14 +118,17 @@
     <Filter Include="소스 파일\Scene\Stage\StageUI\GameOverUI">
       <UniqueIdentifier>{c3b1305e-7380-47da-8a51-443c3d3b2f02}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Scene\GameOver">
-      <UniqueIdentifier>{8c444795-e30c-4823-8152-a7aefdd4ca94}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Mgr\SoundMgr">
       <UniqueIdentifier>{518894f0-d626-44a1-9ab9-79470ce7e252}</UniqueIdentifier>
     </Filter>
     <Filter Include="소스 파일\Game_Object\CEffect">
       <UniqueIdentifier>{0aa90409-9522-4a0c-90c7-abda6bef3fc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Mgr\SceneMgr\ObjMgr">
+      <UniqueIdentifier>{2d534861-e386-4352-9791-f9e9690e966d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Scene\Stage\StageUI\GameClearUI">
+      <UniqueIdentifier>{102b8bf0-173b-44a1-971b-9f82f9653af3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -169,7 +169,7 @@
       <Filter>소스 파일\Mgr\TileMgr</Filter>
     </ClInclude>
     <ClInclude Include="CObjMgr.h">
-      <Filter>소스 파일\Mgr\ObjMgr</Filter>
+      <Filter>소스 파일\Mgr\SceneMgr\ObjMgr</Filter>
     </ClInclude>
     <ClInclude Include="CMyBitmap.h">
       <Filter>소스 파일\Mgr\BmpMgr</Filter>
@@ -276,6 +276,9 @@
     <ClInclude Include="CEffect.h">
       <Filter>소스 파일\Game_Object\CEffect</Filter>
     </ClInclude>
+    <ClInclude Include="CGameClear.h">
+      <Filter>소스 파일\Scene\Stage\StageUI\GameClearUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="1945.cpp">
@@ -297,7 +300,7 @@
       <Filter>소스 파일\Mgr\TileMgr</Filter>
     </ClCompile>
     <ClCompile Include="CObjMgr.cpp">
-      <Filter>소스 파일\Mgr\ObjMgr</Filter>
+      <Filter>소스 파일\Mgr\SceneMgr\ObjMgr</Filter>
     </ClCompile>
     <ClCompile Include="CMyBitmap.cpp">
       <Filter>소스 파일\Mgr\BmpMgr</Filter>
@@ -382,6 +385,9 @@
     </ClCompile>
     <ClCompile Include="CEffect.cpp">
       <Filter>소스 파일\Game_Object\CEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="CGameClear.cpp">
+      <Filter>소스 파일\Scene\Stage\StageUI\GameClearUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

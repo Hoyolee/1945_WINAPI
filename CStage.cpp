@@ -14,6 +14,8 @@
 #include "CScoreUI.h"
 #include "CGameOver.h"
 #include "CSoundMgr.h"
+#include "CBoss.h"
+#include "CGameClear.h"
 
 float sVolume = 0.25f;
 CStage::CStage()
@@ -40,20 +42,13 @@ void CStage::Initialize()
 	CObjMgr::Get_Instance()->AddObject(OBJ_LIFE_UI, CAbstractFactory<CLifeUI>::Create(100, 100));
 	CObjMgr::Get_Instance()->AddObject(OBJ_LIFE_UI, CAbstractFactory<CLifeUI>::Create(150, 100));
 
-	CObjMgr::Get_Instance()->AddObject(OBJ_STAGE_UI, CAbstractFactory<CScoreUI>::Create());
-	// 보스 생성
-	//CObjMgr::Get_Instance()->AddObject(OBJ_BOSS, CAbstractFactory<CBoss>::Create(300.f,200.f));	
-	//CObjMgr::Get_Instance()->AddObject(OBJ_MONSTER, CAbstractFactory<CEnemy>::Create(300.f, 100.f));
+	CObjMgr::Get_Instance()->AddObject(OBJ_STAGE_UI, CAbstractFactory<CScoreUI>::Create());	
 }
 
 int CStage::Update()
 {
 	CObjMgr::Get_Instance()->Update();
-	  
-	// 씬 변경관련
-	//int iLife = dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Object(OBJ_PLAYER).front())->Get_LifeCount();
-	//dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Object(OBJ_PLAYER).front())->Get_State();
-	
+
 	return OBJ_NOEVENT;
 }
 
@@ -90,10 +85,7 @@ void CStage::Late_Update()
 		CObjMgr::Get_Instance()->Get_Object(OBJ_BOSS),
 		CObjMgr::Get_Instance()->Get_Object(OBJ_BULLET)
 	);
-
-
 	CObjMgr::Get_Instance()->Late_Update();
-
 	CScrollMgr::Get_Instance()->Scroll_Lock();
 }
 

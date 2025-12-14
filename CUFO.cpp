@@ -23,7 +23,7 @@ void CUFO::Initialize()
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Monster/enemyUFO.bmp", L"UFO");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Monster/deathExplosions.bmp", L"boom");
 
-	m_iHp = 15;
+	m_iHp = 10;
 	// 플레이어 크기 및 위치지정
 	m_tInfo.fCX = 53.f;
 	m_tInfo.fCY = 32.f;
@@ -186,7 +186,7 @@ void CUFO::Render(HDC hDC)
 			hMemDC2,																		// 복사 할 DC
 			m_tFrame.iStart * (int)m_tInfo.fCX,				// 복사할 이미지의 LEFT, TOP
 			m_tFrame.iStart * (int)m_tInfo.fCY,
-			(INT)m_tInfo.fCX,														// 복사할 이미지의 가로, 세로
+			(INT)m_tInfo.fCX-3,														// 복사할 이미지의 가로, 세로
 			(INT)m_tInfo.fCY,
 			RGB(255, 0, 255));													// 제거할 색상
 	}
@@ -230,8 +230,10 @@ void CUFO::OnCollision(CObj* pOther)
 
 	m_iHp--;
 
+	CSoundMgr::Get_Instance()->PlaySound(L"Hit.mp3", SOUND_HIT, 0.75f);
+	
 	if (m_eCurState == DEAD)
-		return;
+	return;
 
 	CObjMgr::Get_Instance()->Get_Object(OBJ_STAGE_UI).front()->Add_Score(m_iScore);
 
@@ -240,7 +242,7 @@ void CUFO::OnCollision(CObj* pOther)
 		m_eCurState = DEAD;
 		m_bDead = true;
 
-		CSoundMgr::Get_Instance()->PlaySound(L"Object_Dead.mp3", SOUND_EFFECT, 0.25f);
+		CSoundMgr::Get_Instance()->PlaySound(L"Object_Dead.mp3", SOUND_DEAD, 0.25f);
 
 		m_pFrameKey = L"boom";
 

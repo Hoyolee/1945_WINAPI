@@ -148,7 +148,7 @@ void CEnemy::OnCollision(CObj* pOther)
 	CObjMgr::Get_Instance()->AddObject(OBJ_EFFECT, 
 		CAbstractFactory<CEffect>::Create(m_tInfo.fX, m_tInfo.fY-25));
 
-  CSoundMgr::Get_Instance()->PlaySound(L"Hit.mp3", SOUND_EFFECT, 0.75f);
+  CSoundMgr::Get_Instance()->PlaySound(L"Hit.mp3", SOUND_HIT, 0.5f);
 	--m_iHp;
 	
 	if (m_eCurState == DEAD)

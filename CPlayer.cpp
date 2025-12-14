@@ -9,7 +9,9 @@
 #include "CSceneMgr.h"
 #include "CCollisionMgr.h"
 #include "CSoundMgr.h"
-#include "CKeyMgr.h"
+
+// 보스헤더 상호참조 상태라 이거 조심해야됌
+#include "CBoss.h"
 // 플레이어가 사용하는 오브젝트 헤더
 #include "CBomb.h"
 //#include "CLife.h"
@@ -20,12 +22,10 @@ CPlayer::CPlayer() :  m_fTime(0.f)
 , m_iScore(0), m_iBombCount(3), m_iLife(3) 
 {
 }
-
 CPlayer::~CPlayer()
 {
 	Release();
 }
-
 void CPlayer::Initialize()
 {
 	m_iHp = 1;
@@ -58,7 +58,6 @@ void CPlayer::Initialize()
 	m_eCurState = IDLE;
 	m_bDead = false;
 }
-
 int CPlayer::Update()
 {
 	__super::Update_Rect();
@@ -80,7 +79,7 @@ int CPlayer::Update()
 	if (m_eCurState == DEAD)
 	{
     Motion_Change();
-		CSoundMgr::Get_Instance()->PlaySound(L"Object_Dead.mp3", SOUND_EFFECT, 0.25f);
+		CSoundMgr::Get_Instance()->PlaySound(L"Object_Dead.mp3", SOUND_DEAD, 0.5f);
 		if(m_iLifeCount < 0)
 		{ 
 			if (Anim_Dead())
@@ -110,14 +109,9 @@ int CPlayer::Update()
 	}
 	return OBJ_NOEVENT;
 }
-
 void CPlayer::Late_Update()
 {
-//#ifdef _DEBUG
-//	cout << m_eCurState << "\t " << m_iHp << "\t" << m_iLifeCount << endl;
-//#endif // _DEBUG
 }
-
 void CPlayer::Render(HDC hDC)
 {
 	HDC		hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
@@ -134,7 +128,10 @@ void CPlayer::Render(HDC hDC)
 		(INT)m_tInfo.fCY,
 		RGB(255, 0, 255));													// 제거할 색상
 }
+void CPlayer::Release()
+{
 
+}
 void CPlayer::Key_Input()
 {
 	m_fBulletTime -= 1.0f / 15.f;
@@ -254,10 +251,6 @@ void CPlayer::Motion_Change()
 	}
 
 }
-void CPlayer::Release()
-{
-
-}
 void CPlayer::Player_Move_Frame()
 {
 	if (m_eCurState == IDLE || m_eCurState == RESPAWN)
@@ -311,7 +304,7 @@ void CPlayer::Insert_Player_Animation()
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Player/playerMove.bmp", L"Player_LEFT");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Player/playerMove.bmp", L"Player_RIGHT");
 	//플레이어 피격 모션
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Player/Resize.bmp", L"Player_Boom");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Player/playerHit_resized.bmp", L"Player_Boom");
 	m_pFrameKey = L"Player_DOWN";
 }
 void CPlayer::OnCollision(CObj* pOther)
