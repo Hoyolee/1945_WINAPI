@@ -47,7 +47,7 @@ int CEnemyBullet::Update()
 
 void CEnemyBullet::Late_Update()
 {
-  if (m_tInfo.fY > WINCY || m_tInfo.fX > WINCX || m_tInfo.fX < 0)
+  if (m_tInfo.fY > WINCY+300 || m_tInfo.fX > WINCX+300 || m_tInfo.fX < 0 || m_tInfo.fY < 0)
     m_bDead = true;
 }
 

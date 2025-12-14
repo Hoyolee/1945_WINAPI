@@ -43,7 +43,10 @@ public:
 private:
   
   int         m_iPatternCount;
-  
+  int         m_iPattern;
+  int         m_iWhipCount;
+  int         m_iSectorCount;
+
   float       m_fBulletTime;
   float       m_fPatternTime;
   float       m_fWhipTime;

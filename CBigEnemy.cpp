@@ -20,7 +20,7 @@ CBigEnemy::~CBigEnemy()
 void CBigEnemy::Initialize()
 {
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Monster/enemy2.bmp", L"Enemy2");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Monster/Big_Enemy_Explosion.bmp", L"EnemyExplode");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Monster/CBigEnemyBoom.bmp", L"EnemyExplode");
 
 	m_iScore = 500;
 	m_iHp = 25;
@@ -75,7 +75,7 @@ int CBigEnemy::Update()
 				}
 			}
 		}
-		if (m_fTime + 1000 < GetTickCount()&& m_eCurState == IDLE)
+		if (m_fTime + 1000 < GetTickCount())
 		{
 			float fWidth(0.f), fHeight(0.f);
 			fWidth = CObjMgr::Get_Instance()->Get_Object(OBJ_PLAYER).front()->Get_Info()->fX - m_tInfo.fX;
@@ -95,8 +95,6 @@ void CBigEnemy::Late_Update()
 
 void CBigEnemy::Render(HDC hDC)
 {
-	if (m_eCurState == IDLE)
-	{ 
 		HDC		hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
 		// 플레이어 렌더
 
@@ -111,23 +109,7 @@ void CBigEnemy::Render(HDC hDC)
 			(INT)m_tInfo.fCX,														// 복사할 이미지의 가로, 세로
 			(INT)m_tInfo.fCY,
 			RGB(255, 0, 255));													// 제거할 색상
-	}
-	else
-	{
-		HDC		hMemDC2 = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
-		// 플레이어 렌더
-		GdiTransparentBlt(hDC,												// 복사 받을 DC
-			m_tRect.left,																// 복사 받을 공간의 LEFT	
-			m_tRect.top,																// 복사 받을 공간의 TOP
-			(int)m_tInfo.fCX,														// 복사 받을 공간의 가로 
-			(int)m_tInfo.fCY,														// 복사 받을 공간의 세로 
-			hMemDC2,																		// 복사 할 DC
-			m_tFrame.iStart * (int)m_tInfo.fCX,				// 복사할 이미지의 LEFT, TOP
-			m_tFrame.iStart * (int)m_tInfo.fCY,
-			(INT)m_tInfo.fCX,														// 복사할 이미지의 가로, 세로
-			(INT)m_tInfo.fCY,
-			RGB(255, 0, 255));													// 제거할 색상
-	}
+	
 }
 
 void CBigEnemy::Release()
@@ -137,6 +119,8 @@ void CBigEnemy::Release()
 
 bool CBigEnemy::Anim_Dead()
 {
+	m_pFrameKey = L"EnemyExplode";
+
 	if (!m_bisDead)
 		return false;
 
@@ -172,7 +156,7 @@ void CBigEnemy::OnCollision(CObj* pOther)
 		m_tFrame.iStart = 0;
 		m_tFrame.iEnd = 11;
 		m_tFrame.iMotion = 0;
-		m_tFrame.dwSpeed = 50;
+		m_tFrame.dwSpeed = 150;
 		m_tFrame.dwTime = GetTickCount();
 	}
 }

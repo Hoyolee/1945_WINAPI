@@ -4,7 +4,7 @@
 class CPlayer : public CObj
 {
 public:
-	enum STATE { IDLE, RESPAWN, LEFT_MOVE, RIGHT_MOVE, ATTACK, DEAD, INVINCIBLE,GAMEOVER, ST_END };
+	enum STATE { IDLE, RESPAWN, LEFT_MOVE, RIGHT_MOVE, ATTACK, DEAD, INVINCIBLE, ST_END };
 
 public:
 	CPlayer();

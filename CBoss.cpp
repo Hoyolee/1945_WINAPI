@@ -39,6 +39,10 @@ void CBoss::Initialize()
 	m_iScore = 1000;
 	m_iPatternCount = 0;
 	m_iPatternIndex = 0;
+	m_iSectorCount = 0;
+	m_iPattern = 0;
+	m_iWhipCount = 0;
+	
 
 	m_fDistance = 100.f;
 	m_fSpeed = 5.f;
@@ -69,9 +73,24 @@ int CBoss::Update()
 	if (m_eCurState == MOVE)
 	{
 		Move_State_Boss();
-		if (m_fTime + 3500 < GetTickCount())
+		if (m_fTime + 3500 < GetTickCount() && m_iPattern == 0)
 		{
 			m_eCurState = PATTERN1;
+			m_fTime = GetTickCount();
+			m_iPattern++;
+		}
+		if (m_fTime + 7500 < GetTickCount() && m_iPattern == 1)
+		{
+			m_eCurState = PATTERN2;
+			m_bisTarget = false;
+			m_iSectorCount = 0;
+			m_fTime = GetTickCount();
+			m_iPattern++;
+		}
+		if (m_fTime + 10500 < GetTickCount() && m_iPattern == 2)
+		{
+			m_bisTarget = false;
+			m_eCurState = PATTERN3;
 			m_fTime = GetTickCount();
 		}
 	}
@@ -254,7 +273,7 @@ void CBoss::Whip_Pattern()
 
 	const float spawnX = m_tInfo.fX;
 	const float spawnY = m_tInfo.fY + (m_tInfo.fCY * 0.5f);
-	if (m_iPatternCount < 5)
+	if (m_iWhipCount < 5)
 	{
 		if (!m_bisTarget)
 		{
@@ -272,23 +291,21 @@ void CBoss::Whip_Pattern()
 			fHeight = CObjMgr::Get_Instance()->Get_Object(OBJ_PLAYER).front()->Get_Info()->fY - m_tInfo.fY;
 			float playerAngle = atan2f(fHeight, fWidth);
 
-			if (m_fBulletTime + 50 < GetTickCount())
+			if (m_fBulletTime + 25 < GetTickCount())
 			{
 				CObjMgr::Get_Instance()->AddObject(OBJ_MON_BULLET,
-					CAbstractFactory <CEnemyBullet>::Create(spawnX, spawnY, playerAngle, 4.0f));
+					CAbstractFactory <CBigBullet>::Create(spawnX, spawnY, playerAngle, 4.0f));
 				m_fBulletTime = GetTickCount();
 			}
 			if(m_fWhipTime + 3000 < GetTickCount())
 			{
-				m_iPatternCount++;
 				m_fWhipTime = GetTickCount();
+				m_iWhipCount++;
 			}
 		}
 	}
 	else
 	{
-		m_iPatternCount = 0;
-		m_bisTarget = false;
 		m_eCurState = MOVE;
 		return;
 	}
@@ -296,6 +313,7 @@ void CBoss::Whip_Pattern()
 }
 void CBoss::Bullet_Rain()
 {
+
 	const float Speed = fabsf(m_fSpeed);
 	float TargetX = 600.f;
 	float SecTargetX = 25.f;
@@ -305,7 +323,7 @@ void CBoss::Bullet_Rain()
 
 	const float downAngle = PI / 2.f;
 
-	if (m_iPatternCount < 4)
+	if (m_iPatternCount < 7)
 	{
 		if (!m_bisTarget)
 		{
@@ -355,14 +373,12 @@ void CBoss::Bullet_Rain()
 void CBoss::Sector_Pattern()
 {
 	float TargetX = 300.f;
-	float SecTargetX = 25.f;
-
 	const float speed = fabsf(m_fSpeed);
 
 	const float spawnX = m_tInfo.fX;
 	const float spawnY = m_tInfo.fY + (m_tInfo.fCY * 0.5f) + 5.f;
 	
-	if (m_iPatternCount < 5)
+	if (m_iSectorCount < 7)
 	{
 		if (!m_bisTarget)
 		{
@@ -384,13 +400,13 @@ void CBoss::Sector_Pattern()
 					m_fAngle += (i + 3);
 				}
 				m_fBulletTime = GetTickCount();
+				m_iSectorCount++;
 			}
 		}
 	}
 	else
 	{
 		m_eCurState = MOVE;
-		m_iPatternCount = 0;
 		return;
 	}
 }

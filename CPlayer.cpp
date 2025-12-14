@@ -114,7 +114,10 @@ void CPlayer::Late_Update()
 }
 void CPlayer::Render(HDC hDC)
 {
-	HDC		hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
+	if(m_eCurState == IDLE || m_eCurState == RESPAWN || m_eCurState == LEFT_MOVE||
+		m_eCurState == RIGHT_MOVE|| m_eCurState == ATTACK|| m_eCurState == INVINCIBLE)
+	{
+		HDC		hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
 	// 플레이어 렌더
 	GdiTransparentBlt(hDC,												// 복사 받을 DC
 		m_tRect.left,										// 복사 받을 공간의 LEFT	
@@ -127,6 +130,23 @@ void CPlayer::Render(HDC hDC)
 		(INT)m_tInfo.fCX,														// 복사할 이미지의 가로, 세로
 		(INT)m_tInfo.fCY,
 		RGB(255, 0, 255));													// 제거할 색상
+	 }
+	else
+	{
+		HDC		hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
+		// 플레이어 렌더
+		GdiTransparentBlt(hDC,												// 복사 받을 DC
+			m_tRect.left,										// 복사 받을 공간의 LEFT	
+			m_tRect.top,											// 복사 받을 공간의 TOP
+			(int)m_tInfo.fCX,														// 복사 받을 공간의 가로 
+			(int)m_tInfo.fCY,														// 복사 받을 공간의 세로 
+			hMemDC,																			// 복사 할 DC
+			m_tFrame.iStart * (int)m_tInfo.fCX,					// 복사할 이미지의 LEFT, TOP
+			m_tFrame.iMotion * (int)m_tInfo.fCY,
+			(INT)m_tInfo.fCX,														// 복사할 이미지의 가로, 세로
+			(INT)m_tInfo.fCY,
+			RGB(255, 0, 255));													// 제거할 색상
+	}
 }
 void CPlayer::Release()
 {
@@ -245,6 +265,9 @@ void CPlayer::Motion_Change()
 			m_tFrame.iMotion = 0;
 			m_tFrame.dwSpeed = 200;
 			m_tFrame.dwTime = GetTickCount();
+
+
+
 			break;
 		}
 		m_ePreState = m_eCurState;
@@ -282,14 +305,6 @@ void CPlayer::Player_Move_Frame()
 			m_tFrame.iStart = m_tFrame.iEnd;
 		}
 	}
-	if (m_eCurState == DEAD)
-	{
-		if (m_tFrame.dwSpeed + m_tFrame.dwTime < GetTickCount())
-		{
-			++m_tFrame.iStart;
-			m_tFrame.dwTime = GetTickCount();
-    }
-	}
 }
 void CPlayer::Offset()
 {
@@ -304,7 +319,7 @@ void CPlayer::Insert_Player_Animation()
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Player/playerMove.bmp", L"Player_LEFT");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Player/playerMove.bmp", L"Player_RIGHT");
 	//플레이어 피격 모션
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Player/playerHit_resized.bmp", L"Player_Boom");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"Image/Player/playerHit_matched_to_playerMove.bmp", L"Player_Boom");
 	m_pFrameKey = L"Player_DOWN";
 }
 void CPlayer::OnCollision(CObj* pOther)
@@ -361,7 +376,7 @@ bool CPlayer::isOnCollision()
 	if (m_eCurState == IDLE)
 	{
 		m_iCounting++;
-		if (m_iCounting > 1)
+		if (m_iCounting > 1 || m_eCurState==ATTACK)
 		{
 			return false;
 		}
